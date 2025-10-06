@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
-const port = 4000;
+const port = process.env.PORT || 4000;;
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const path = require("path");
@@ -16,7 +16,7 @@ require('dotenv').config();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // your React app URL
+    origin: process.env.FRONTEND_URL, // your React app URL
     methods: ["GET", "POST"],
   },
 });
