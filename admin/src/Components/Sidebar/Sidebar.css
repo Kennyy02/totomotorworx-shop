@@ -1,0 +1,83 @@
+/* --- Sidebar Container --- */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0; /* Updated padding for better internal space */
+    gap: 15px; /* Slightly reduced gap for a tighter feel */
+    width: 100%;
+    max-width: 250px;
+    min-height: 100vh; /* Changed to min-height for flexible content */
+    background: #f8f9fa; /* A soft, off-white background */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+    box-sizing: border-box;
+}
+
+/* --- Sidebar Items --- */
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the left for a classic layout */
+    margin: 0px 20px;
+    padding: 12px 15px; /* Increased padding for more space around content */
+    border-radius: 8px; /* Smoother rounded corners */
+    background: #ffffff;
+    gap: 15px; /* Reduced gap for a tighter feel */
+    cursor: pointer;
+    color: #495057; /* Darker, more professional text color */
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.sidebar-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px); /* A subtle lift on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-item.active {
+    background: #6079ff; /* Highlight active item with an accent color */
+    color: white;
+    box-shadow: 0 4px 10px rgba(96, 121, 255, 0.3);
+}
+
+.sidebar-item.active:hover {
+    transform: none;
+    box-shadow: 0 4px 10px rgba(96, 121, 255, 0.3);
+}
+
+/* --- Item Icon --- */
+.sidebar-item img {
+    width: 24px; /* Slightly smaller icon for better balance */
+    height: 24px;
+    filter: brightness(0.6); /* Muted icon color */
+    transition: filter 0.3s ease;
+}
+
+.sidebar-item:hover img,
+.sidebar-item.active img {
+    filter: brightness(10); /* Brighter icon on hover/active */
+}
+
+/* --- Responsive Styles (Refined) --- */
+@media(max-width:800px) {
+    .sidebar {
+        padding: 15px 0;
+        flex-direction: row;
+        width: 100%;
+        max-width: none;
+        min-height: auto;
+        justify-content: space-around;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Shadow on top for mobile */
+    }
+    .sidebar-item {
+        margin: 0;
+        padding: 8px 12px;
+        gap: 8px;
+        font-size: 14px;
+    }
+    .sidebar-item img {
+        width: 20px;
+        height: 20px;
+    }
+}

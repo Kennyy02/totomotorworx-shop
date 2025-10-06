@@ -1,0 +1,127 @@
+/* --- Shop Location Container --- */
+.shop-location {
+  width: 70%;
+  margin: auto;
+  margin-bottom: 150px;
+  padding: 40px 60px;
+  border-radius: 20px;
+  background: radial-gradient(circle, #ffffff 0%, #f5f7fa 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 
+              0 5px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  animation: fadeInUp 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.shop-location h1 {
+  color: #2c3e50;
+  font-size: 48px;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.08);
+}
+
+.shop-location p {
+  color: #7f8c8d;
+  font-size: 18px;
+  text-align: center;
+  max-width: 600px;
+  line-height: 1.5;
+}
+
+/* --- Shop Card --- */
+.shop-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 25px 30px;
+  text-align: center;
+  border: 1px solid #e3e3e3;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  max-width: 500px;
+}
+
+.shop-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+.shop-card h2 {
+  font-size: 26px;
+  color: #34495e;
+  margin-bottom: 12px;
+}
+
+.shop-card p {
+  font-size: 16px;
+  color: #555;
+  margin: 6px 0;
+}
+
+/* --- Map Section --- */
+.shop-map {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Keyframe Animation --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 1024px) {
+  .shop-location {
+    width: 85%;
+    padding: 30px;
+    margin-bottom: 100px;
+  }
+  .shop-location h1 { font-size: 36px; }
+  .shop-location p { font-size: 16px; }
+  .shop-card h2 { font-size: 22px; }
+}
+
+@media (max-width: 768px) {
+  .shop-location {
+    width: 90%;
+    padding: 20px;
+    gap: 20px;
+  }
+  .shop-location h1 { font-size: 28px; }
+  .shop-location p { font-size: 14px; }
+  .shop-card {
+    padding: 20px;
+  }
+  .shop-card h2 { font-size: 20px; }
+  .shop-card p { font-size: 14px; }
+}
+
+@media (max-width: 500px) {
+  .shop-location {
+    width: 95%;
+    padding: 15px;
+    margin-bottom: 50px;
+  }
+  .shop-location h1 { font-size: 22px; }
+  .shop-location p { font-size: 12px; }
+  .shop-card {
+    padding: 15px;
+  }
+  .shop-card h2 { font-size: 18px; }
+  .shop-card p { font-size: 12px; }
+}

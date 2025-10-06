@@ -1,0 +1,186 @@
+/*
+  ==============================================
+  Offers Container (Refined)
+  ==============================================
+*/
+.offers {
+  max-width: 1440px;
+  height: 60vh;
+  margin: 150px auto;
+  padding: 0 140px;
+  /* Updated gradient for a warmer, more inviting look */
+  background: linear-gradient(180deg, #fef4f4 0%, #f1ebf2 100%);
+  border-radius: 20px;
+  /* Enhanced, layered shadow for depth */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  overflow: hidden;
+  position: relative;
+}
+
+/*
+  ==============================================
+  Left Section (Text Content)
+  ==============================================
+*/
+.offers-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: slideInLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+.offers-left h1 {
+  color: #2c3e50;
+  font-size: 80px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.offers-left p {
+  color: #555;
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+/*
+  ==============================================
+  Button with Pulse Animation (Refined)
+  ==============================================
+*/
+.offers-left button {
+  width: 282px;
+  height: 70px;
+  border-radius: 50px;
+  background: #ff6b6b;
+  border: none;
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 30px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  /* New, refined pulse animation */
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.offers-left button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+  background: #e74c3c;
+  animation-play-state: paused; /* Pause the pulse on hover */
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+/*
+  ==============================================
+  Right Section (Image with Floating Animation)
+  ==============================================
+*/
+.offers-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-top: 50px;
+  animation: slideInRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+}
+
+.offers-right img {
+  /* New: Continuous floating animation */
+  animation: floating 3s ease-in-out infinite alternate;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* New animation for the image */
+@keyframes floating {
+  from { transform: translateY(-5px); }
+  to { transform: translateY(5px); }
+}
+
+/*
+  ==============================================
+  Responsive Styles (Refined)
+  ==============================================
+*/
+@media(max-width:1280px){
+  .offers{ padding: 0px 80px; margin-bottom: 100px; }
+  .offers-left h1{ font-size: 40px; }
+  .offers-left p{ font-size: 18px; }
+  .offers-right img{ width: 300px; }
+  .offers-left button{ width: 220px; height: 50px; font-size: 18px; margin-top: 20px; }
+}
+
+@media(max-width:1024px){
+  .offers{ padding: 0px 60px; margin-bottom: 60px; height: 40vh; }
+  .offers-left h1{ font-size: 30px; }
+  .offers-left p{ font-size: 16px; }
+  .offers-right img{ width: 200px; }
+  .offers-left button{ width: 160px; height: 40px; font-size: 16px; }
+}
+
+@media(max-width:800px){
+  .offers {
+    flex-direction: column;
+    padding: 40px 30px;
+    height: auto;
+    text-align: center;
+    margin-bottom: 60px;
+    gap: 30px;
+  }
+  .offers-left h1{ font-size: 26px; line-height: 1.2; }
+  .offers-left p{ font-size: 14px; }
+  .offers-left button{ margin: 20px auto 0; }
+  .offers-right{
+    padding-top: 0;
+    justify-content: center;
+  }
+  .offers-right img{ width: 220px; }
+}
+
+@media(max-width:500px){
+  .offers{ margin-bottom: 40px; padding: 30px 15px; }
+  .offers-left h1{ font-size: 20px; }
+  .offers-left p{ font-size: 12px; }
+  .offers-left button{ width: 140px; height: 35px; font-size: 12px; margin-top: 15px; }
+  .offers-right img{ width: 160px; }
+}

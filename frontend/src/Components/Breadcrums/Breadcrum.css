@@ -1,0 +1,85 @@
+.breadcrum {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Updated to a darker, more readable color */
+  color: #555;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 60px 170px;
+  text-transform: capitalize;
+  /* Add a subtle, almost invisible shadow to give it depth */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  padding: 10px 15px; /* Added padding for a more contained look */
+  background-color: #fff; /* A clean white background */
+}
+
+/* Style for the breadcrumb links (assuming they are anchor tags) */
+.breadcrum a {
+  color: inherit; /* Inherit the main breadcrumb color */
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
+  cursor: pointer;
+}
+
+.breadcrum a:hover {
+  /* A vibrant accent color on hover for visual feedback */
+  color: #ff6b6b;
+  transform: translateY(-2px); /* A slight lift on hover */
+}
+
+/* Style for the images within the breadcrumb */
+.breadcrum img {
+  width: 15px;
+  height: 15px;
+  /* Ensure the icon color changes on hover */
+  transition: filter 0.3s ease;
+}
+
+/* The last item is usually the current page and should not be a link.
+   We can style it to look inactive. */
+.breadcrum span {
+  color: #8c8c8c; /* A lighter gray to indicate the current page */
+  font-weight: 500;
+}
+
+@media(max-width:1280px){
+  .breadcrum{
+    margin: 30px 50px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+@media(max-width:1024px){
+  .breadcrum{
+    margin: 30px 30px;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+@media(max-width:800px){
+  .breadcrum{
+    margin: 30px 10px;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  .breadcrum img {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+@media(max-width:500px){
+  .breadcrum{
+    font-size: 10px;
+    margin: 20px 5px;
+    padding: 5px 8px;
+  }
+  .breadcrum img {
+    width: 10px;
+    height: 10px;
+  }
+}

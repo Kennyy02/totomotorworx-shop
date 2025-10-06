@@ -1,0 +1,85 @@
+/*
+  ==============================================
+  Global Variables & Resets
+  ==============================================
+*/
+:root {
+  --primary-color: #34495e;      /* Dark professional text color */
+  --secondary-color: #7f8c8d;    /* Muted text for paragraphs */
+  --accent-color: #3498db;       /* A clean, vibrant blue for accents */
+  --background-color: #f8f9fa;   /* Soft, light gray background */
+  --card-background: #ffffff;    /* Clean white for containers */
+  --border-color: #e0e6ed;       /* Light border for subtle separation */
+  --font-family: 'Inter', sans-serif; /* A modern, readable font */
+}
+
+/* Global body and typography settings */
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--primary-color);
+  line-height: 1.6;
+}
+
+/* Base root container */
+#root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem; /* Increased padding for more space */
+  text-align: center;
+}
+
+/*
+  ==============================================
+  Reusable Components & Utility Classes
+  ==============================================
+*/
+
+/* Card component for content blocks */
+.card {
+  background-color: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* A clean, modern button style */
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 50px;
+  background-color: var(--accent-color);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+/* Read more link style */
+.read-the-docs {
+  color: var(--secondary-color);
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.read-the-docs:hover {
+  color: var(--accent-color);
+}

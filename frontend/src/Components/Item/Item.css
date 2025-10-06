@@ -1,0 +1,214 @@
+/*
+  ==============================================
+  Modern Item Card Styles (Enhanced & Equal Height)
+  ==============================================
+*/
+.item {
+  animation: dashIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0;
+
+  width: 270px;
+  min-height: 420px; /* ✅ Equal height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+  cursor: pointer;
+  border-radius: 20px;
+  overflow: hidden;
+
+  /* Softer gradient for depth */
+  background: linear-gradient(145deg, #fafafa, #ffffff);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/*
+  ==============================================
+  Dynamic Hover Effects (Enhanced)
+  ==============================================
+*/
+.item:hover {
+  transform: translateY(-12px) scale(1.04);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15),
+              0 0 18px rgba(74, 144, 226, 0.45);
+  z-index: 10;
+}
+
+/*
+  ==============================================
+  Image Shine Effect (Enhanced)
+  ==============================================
+*/
+.item-img-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+}
+
+.item-img-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-20deg);
+  transition: transform 0.7s ease;
+}
+
+.item:hover .item-img-container::before {
+  transform: skewX(-20deg) translateX(200%);
+}
+
+/* Product Image */
+.item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.item:hover img {
+  transform: scale(1.08);
+}
+
+/* Product Name */
+.item p {
+  margin: 15px 0 12px;
+  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  padding: 0 15px;
+  line-height: 1.4;
+
+  flex-grow: 1; /* ✅ Makes names take up equal space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Price Container */
+.item-prices {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+/* New Price */
+.item-price-new {
+  color: #2ecc71;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* Old Price */
+.item-price-old {
+  color: #95a5a6;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+
+/*
+  ==============================================
+  Keyframe Animation
+  ==============================================
+*/
+@keyframes dashIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/*
+  ==============================================
+  Responsive Adjustments
+  ==============================================
+*/
+@media (max-width: 1280px) {
+  .item {
+    width: 230px;
+    min-height: 380px;
+  }
+  .item p {
+    font-size: 15px;
+  }
+  .item-price-new {
+    font-size: 20px;
+  }
+  .item-price-old {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .item {
+    width: 200px;
+    min-height: 360px;
+  }
+  .item p {
+    font-size: 14px;
+  }
+  .item-price-new {
+    font-size: 18px;
+  }
+  .item-price-old {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 800px) {
+  .item {
+    width: 180px;
+    min-height: 340px;
+  }
+  .item p {
+    font-size: 14px;
+  }
+  .item-price-new {
+    font-size: 18px;
+  }
+  .item-price-old {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 500px) {
+  .item {
+    width: 150px;
+    min-height: 300px;
+  }
+  .item p {
+    font-size: 12px;
+    margin: 8px 0;
+    padding: 0 6px;
+  }
+  .item-price-new {
+    font-size: 16px;
+  }
+  .item-price-old {
+    font-size: 12px;
+  }
+  .item-prices {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+}

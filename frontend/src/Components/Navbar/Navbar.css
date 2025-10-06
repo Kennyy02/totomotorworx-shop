@@ -1,0 +1,275 @@
+/* --- Corrected Dropdown Styles --- */
+/* The container for the dropdown list item */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+/* The dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  top: 100%;
+  left: 0;
+  border-radius: 8px;
+  padding: 10px 0;
+  list-style: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* The links inside the dropdown */
+.dropdown-content a {
+  color: #2c3e50;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 4px;
+}
+
+.dropdown-content a:hover {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown-container:hover .dropdown-content {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure the main link is styled properly on hover too */
+.dropdown-container:hover > a {
+  color: #ff6b6b;
+}
+
+/* --- Your Existing Navbar Styles (Corrected for Horizontal Mobile) --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+.nav-dropdown {
+  display: none; /* Hide the dropdown icon as it's not needed for a horizontal menu */
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo img {
+  height: 100px;
+  width: 100px;
+  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
+  transition: filter 0.3s ease;
+}
+
+.nav-logo img:hover {
+  filter: drop-shadow(3px 3px 8px rgba(0, 0, 0, 0.4));
+}
+
+.nav-logo p {
+  color: #2c3e50;
+  font-size: 38px;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 30px;
+  color: #7f8c8d;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu > li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.nav-menu > li:hover {
+  color: #ff6b6b;
+}
+
+/* Animated underline effect */
+.nav-menu hr {
+  border: none;
+  width: 0;
+  height: 3px;
+  border-radius: 10px;
+  background: #ff6b6b;
+  transition: width 0.3s ease;
+}
+
+.nav-menu > li:hover hr {
+  width: 80%;
+}
+
+.nav-login-cart {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-login-cart img {
+  height: 100px;
+  width: 100px;
+  transition: transform 0.3s ease;
+}
+
+.nav-login-cart img:hover {
+  transform: scale(1.1);
+}
+
+.nav-login-cart button {
+  width: 80px;
+  height: 30px;
+  outline: none;
+  border: 1px solid #ff6b6b;
+  border-radius: 75px;
+  color: #ff6b6b;
+  font-size: 15px;
+  font-weight: 500;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s, color 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+.nav-login-cart button:hover {
+  background: #ff6b6b;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.nav-login-cart button:active {
+  background: #e74c3c;
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.nav-cart-count {
+  width: 30px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -35px;
+  margin-left: -100px;
+  border-radius: 11px;
+  font-size: 14px;
+  background: #ff6b6b;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* --- Corrected Media Queries (for horizontal menu) --- */
+@media (max-width: 1280px) {
+  .navbar { padding: 12px 50px; }
+  .nav-logo img { width: 50px; height: 50px; }
+  .nav-logo p { font-size: 25px; }
+  .nav-menu { gap: 30px; font-size: 16px; }
+  .nav-login-cart { gap: 30px; }
+  .nav-login-cart button { width: 120px; height: 45px; font-size: 16px; }
+  .nav-cart-count { margin-left: -100px; font-size: 12px; }
+}
+
+@media (max-width: 1024px) {
+  .navbar { padding: 12px 30px; }
+  .nav-menu { gap: 25px; font-size: 14px; }
+  .nav-login-cart button { width: 80px; height: 35px; font-size: 14px; }
+  .nav-login-cart img { width: 60px; }
+  .nav-cart-count { width: 18px; height: 18px; margin-left: -90px; }
+}
+
+@media (max-width: 800px) {
+  .navbar {
+    padding: 10px 20px;
+    flex-wrap: wrap; /* Allows items to wrap to the next line if space is limited */
+    justify-content: space-between;
+  }
+  .nav-dropdown, .nav-menu-visible { /* Removed these selectors to avoid conflicts */
+    display: none;
+  }
+  .nav-menu {
+    /* Maintained horizontal layout by keeping flex-direction as row */
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px; /* Reduced gap for smaller screens */
+    width: 100%; /* Ensure the menu takes up full width */
+    margin-top: 10px;
+  }
+  .nav-menu li {
+    font-size: 12px;
+  }
+  .nav-login-cart {
+    gap: 10px; /* Reduced gap for smaller screens */
+  }
+  .nav-login-cart button {
+    width: 60px;
+    height: 25px;
+    font-size: 12px;
+  }
+  .dropdown-container{
+    margin-top: -5px;
+  }
+  .nav-cart-count {
+    transform: scale(0.8);
+    margin-top: -25px;
+    margin-left: -80px;
+  }
+}
+
+
+@media (max-width: 500px) {
+  .navbar {
+    padding: 8px 15px;
+    flex-direction: column; /* Optional: stack items vertically if the row is too cluttered */
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-logo {
+    transform: scale(0.8);
+  }
+  .nav-menu {
+    width: 100%;
+    justify-content: space-around;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .nav-login-cart {
+    transform: scale(0.8);
+  }
+}

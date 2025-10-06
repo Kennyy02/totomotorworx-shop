@@ -1,0 +1,55 @@
+/* --- Navbar Container --- */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 60px;
+    background: #ffffff;
+    /* A more visible but soft shadow for a professional lift */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    /* Subtle rounded corners at the bottom */
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-bottom: 20px; /* Increased margin for better separation from content */
+}
+
+/* --- Navigation Logo --- */
+.nav-logo {
+    width: 150px; /* Slightly larger logo for a stronger brand presence */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* --- Navigation Profile Picture --- */
+.nav-profile {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    /* Changed to a circular profile picture */
+    border-radius: 50%;
+    /* Added a subtle border for a cleaner look */
+    border: 2px solid #e0e0e0;
+    cursor: pointer;
+    /* Added a smooth transition for interactive effects */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-profile:hover {
+    /* A slight lift and shadow on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Responsive Styles (Refined) --- */
+@media(max-width: 800px) {
+    .navbar {
+        padding: 15px 20px;
+        margin-bottom: 15px;
+    }
+    .nav-logo {
+        width: 120px;
+    }
+    .nav-profile {
+        width: 50px;
+        height: 50px;
+    }
+}
