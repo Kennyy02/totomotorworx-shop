@@ -6,7 +6,7 @@ const NewCollections = () => {
   const [newCollection, setNewCollection] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:4000/newcollections')
+    fetch('https://totomotorworx-shop-production.up.railway.app/newcollections')
       .then((res) => res.json())
       .then((data) => setNewCollection(data))
       .catch((err) => console.error('Error fetching collections:', err));

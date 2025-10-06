@@ -50,7 +50,7 @@ const LoginSignup = () => {
 
     setLoading(true);
     try {
-      const url = state === "Login" ? 'http://localhost:4000/login' : 'http://localhost:4000/signup';
+      const url = state === "Login" ? 'https://totomotorworx-shop-production.up.railway.app/login' : 'https://totomotorworx-shop-production.up.railway.app/signup';
       const bodyPayload = { ...formData };
       if (state === "Sign Up") bodyPayload.consent = agree;
 
