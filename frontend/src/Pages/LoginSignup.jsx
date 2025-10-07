@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './CSS/LoginSignup.css';
 
+// ✅ Use environment variable for API base URL
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
 const passwordPolicy = (pwd) => {
   const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]).{8,}$/;
   return re.test(pwd);
@@ -50,7 +53,12 @@ const LoginSignup = () => {
 
     setLoading(true);
     try {
-      const url = state === "Login" ? 'https://totomotorworx-shop-production.up.railway.app/login' : 'https://totomotorworx-shop-production.up.railway.app/signup';
+      // ✅ Use environment-based API URL
+      const url =
+        state === "Login"
+          ? `${API_URL}/login`
+          : `${API_URL}/signup`;
+
       const bodyPayload = { ...formData };
       if (state === "Sign Up") bodyPayload.consent = agree;
 
@@ -59,6 +67,7 @@ const LoginSignup = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(bodyPayload)
       });
+
       const data = await response.json();
 
       if (data.success) {

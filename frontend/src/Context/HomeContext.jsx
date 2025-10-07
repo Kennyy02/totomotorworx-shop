@@ -2,7 +2,9 @@ import React, { createContext, useEffect, useState } from "react";
 
 export const HomeContext = createContext(null);
 
-// Correct cart initialization with product IDs
+// ✅ Dynamic API base URL for both local and Railway
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+
 const getDefaultCart = () => {
   let cart = {};
   for (let index = 0; index < 300 + 1; index++) {
@@ -16,22 +18,26 @@ const HomeContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_BACKEND_URL + "/products")
+    // ✅ Fetch products from backend
+    fetch(`${API_URL}/products`)
       .then((response) => response.json())
-      .then((data) => setAll_Product(data));
+      .then((data) => setAll_Product(data))
+      .catch((err) => console.error("Error fetching products:", err));
 
+    // ✅ Fetch user cart if logged in
     if (localStorage.getItem("auth-token")) {
-      fetch(process.env.REACT_APP_BACKEND_URL + "/getcart", {
+      fetch(`${API_URL}/getcart`, {
         method: "POST",
         headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
-          "Conten-Type": "application/json",
+          Accept: "application/json",
+          "auth-token": localStorage.getItem("auth-token"),
+          "Content-Type": "application/json",
         },
         body: "",
       })
         .then((response) => response.json())
-        .then((data) => setCartItems(data));
+        .then((data) => setCartItems(data))
+        .catch((err) => console.error("Error fetching cart:", err));
     }
   }, []);
 
@@ -41,17 +47,17 @@ const HomeContextProvider = (props) => {
       const updated = { ...prev, [itemId]: prev[itemId] + 1 };
 
       if (localStorage.getItem("auth-token")) {
-        fetch("http://localhost:4000/addtocart", {
+        fetch(`${API_URL}/addtocart`, {
           method: "POST",
           headers: {
-            Accept: "application/form-data",
+            Accept: "application/json",
             "auth-token": localStorage.getItem("auth-token"),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ itemId }),
         })
           .then((response) => response.json())
-          .then((data) => console.log(data))
+          .then((data) => console.log("Add to cart:", data))
           .catch((error) => console.error("Add to cart error:", error));
       }
 
@@ -71,20 +77,20 @@ const HomeContextProvider = (props) => {
   // ✅ Remove from cart and restore stock
   const removeFromCart = (itemId) => {
     setCartItems((prev) => {
-      const updated = { ...prev, [itemId]: prev[itemId] - 1 };
+      const updated = { ...prev, [itemId]: Math.max(prev[itemId] - 1, 0) };
 
       if (localStorage.getItem("auth-token")) {
-        fetch("http://localhost:4000/removefromcart", {
+        fetch(`${API_URL}/removefromcart`, {
           method: "POST",
           headers: {
-            Accept: "application/form-data",
+            Accept: "application/json",
             "auth-token": localStorage.getItem("auth-token"),
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ itemId }),
         })
           .then((response) => response.json())
-          .then((data) => console.log(data))
+          .then((data) => console.log("Remove from cart:", data))
           .catch((error) => console.error("Remove from cart error:", error));
       }
 
