@@ -16,12 +16,12 @@ const HomeContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-    fetch("https://totomotorworx-shop-production.up.railway.app/products")
+    fetch(process.env.REACT_APP_BACKEND_URL + "/products")
       .then((response) => response.json())
       .then((data) => setAll_Product(data));
 
     if (localStorage.getItem("auth-token")) {
-      fetch("https://totomotorworx-shop-production.up.railway.app/getcart", {
+      fetch(process.env.REACT_APP_BACKEND_URL + "/getcart", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
