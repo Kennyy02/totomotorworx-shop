@@ -11,7 +11,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 // Any request that isn't for a static file should return index.html
 // This is essential for single-page applications (SPAs) like React Router
-app.get('*', (req, res) => {
+// ✅ FIXED LINE (Express v5-compatible syntax)
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
