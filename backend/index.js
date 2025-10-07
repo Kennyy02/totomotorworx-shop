@@ -487,7 +487,7 @@ app.get("/", (req, res) => {
   res.send("Express App is Running");
 });
 
-// Start server
-app.listen(port, () => {
+// Start the combined HTTP/Socket.IO server
+server.listen(port, () => { // <--- USE server.listen() INSTEAD
     console.log(`Server is running on port ${port}`);
 });
