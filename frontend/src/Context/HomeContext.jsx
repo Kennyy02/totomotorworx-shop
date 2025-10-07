@@ -17,12 +17,25 @@ const HomeContextProvider = (props) => {
   const [all_product, setAll_Product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
+  // HomeContext.jsx
+
   useEffect(() => {
     // ✅ Fetch products from backend
     fetch(`${API_URL}/products`)
       .then((response) => response.json())
-      .then((data) => setAll_Product(data))
-      .catch((err) => console.error("Error fetching products:", err));
+      .then((data) => { // <-- NOTE: Start of the .then() function body
+        // 💡 CRITICAL: Check if the data is an array before setting state
+        if (Array.isArray(data)) {
+            setAll_Product(data);
+        } else {
+            console.error("Backend returned non-array data for products:", data);
+            setAll_Product([]); // Fallback to empty array to prevent .map crash
+        }
+      }) // <-- End of the .then() function body
+      .catch((err) => {
+        console.error("Error fetching products:", err);
+        setAll_Product([]); // Set to empty array on network/server error
+      });
 
     // ✅ Fetch user cart if logged in
     if (localStorage.getItem("auth-token")) {
