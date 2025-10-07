@@ -97,9 +97,10 @@ app.post("/addproduct", (req, res) => {
 app.get("/products", (req, res) => {
   db.query("SELECT * FROM product", (err, results) => {
     if (err) return res.status(500).json({ error: "Failed to fetch products" });
-    res.json(results);
+    res.json(results); // ✅ Ensure no extra array operations
   });
 });
+
 
 // Paginated products endpoint
 app.get("/products_paginated", (req, res) => {
@@ -469,7 +470,8 @@ app.get('/newcollections', (req, res) => {
   const query = "SELECT * FROM product ORDER BY id DESC LIMIT 8";
   db.query(query, (err, results) => {
     if (err) return res.status(500).json({ error: "Failed to fetch new collections" });
-    res.json(results.reverse());
+    // Replace: res.json(results.reverse());
+    res.json(results); // ✅ Send results directly
   });
 });
 
