@@ -96,7 +96,7 @@ app.post("/addproduct", (req, res) => {
 // Get all products (legacy route, not used for pagination)
 app.get("/products", (req, res) => {
   console.log("GET /products called"); // Debug log
-  db.query("SELECT * FROM products", (err, result) => {
+  db.query("SELECT * FROM product", (err, result) => {
     if (err) {
       console.error("Error fetching products:", err);
       // Show full SQL error in response (temporarily)
