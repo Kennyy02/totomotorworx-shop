@@ -95,11 +95,17 @@ app.post("/addproduct", (req, res) => {
 
 // Get all products (legacy route, not used for pagination)
 app.get("/products", (req, res) => {
-  db.query("SELECT * FROM product", (err, results) => {
-    if (err) return res.status(500).json({ error: "Failed to fetch products" });
-    res.json(results); // ✅ Ensure no extra array operations
+  console.log("GET /products called"); // Debug log
+  db.query("SELECT * FROM products", (err, result) => {
+    if (err) {
+      console.error("Error fetching products:", err);
+      // Show full SQL error in response (temporarily)
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(result);
   });
 });
+
 
 
 // Paginated products endpoint
