@@ -22,19 +22,29 @@ const HomeContextProvider = (props) => {
   useEffect(() => {
     // ✅ Fetch products from backend
     fetch(`${API_URL}/products`)
-      .then((response) => response.json())
-      .then((data) => { // <-- NOTE: Start of the .then() function body
-        // 💡 CRITICAL: Check if the data is an array before setting state
-        if (Array.isArray(data)) {
+      .then((response) => {
+        // 1. Check if the HTTP response itself was successful (e.g., status 200-299)
+        if (!response.ok) {
+            console.error("HTTP Error fetching products:", response.status);
+            // Throw an error to skip the next .then() and jump to the .catch()
+            throw new Error(`HTTP error! status: ${response.status}`); 
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // 2. CRITICAL FIX: Ensure 'data' is an array before setting state
+        if (Array.isArray(data)) { 
             setAll_Product(data);
         } else {
+            // This catches the case where the server returns a non-array JSON object (e.g., {error: "..."})
             console.error("Backend returned non-array data for products:", data);
-            setAll_Product([]); // Fallback to empty array to prevent .map crash
+            setAll_Product([]); // Fallback to empty array to prevent map() crash
         }
-      }) // <-- End of the .then() function body
+      })
       .catch((err) => {
+        // 3. Handle network errors or errors thrown by the 'if (!response.ok)' check
         console.error("Error fetching products:", err);
-        setAll_Product([]); // Set to empty array on network/server error
+        setAll_Product([]); // Fallback to empty array
       });
 
     // ✅ Fetch user cart if logged in
