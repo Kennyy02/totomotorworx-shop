@@ -3,6 +3,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import './Inventory.css';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const Inventory = () => {
   const [products, setProducts] = useState([]);
   const [editStock, setEditStock] = useState({});
@@ -30,7 +32,7 @@ const Inventory = () => {
       setLoading(true);
       setError("");
 
-      const res = await axios.get("http://localhost:4000/inventory");
+      const res = await axios.get(`${BACKEND_URL}/inventory`);
 
       const processedProducts = res.data.map(product => ({
         ...product,
@@ -83,7 +85,7 @@ const Inventory = () => {
 
     setSavingId(id);
     try {
-      await axios.put(`http://localhost:4000/inventory/${id}`, { stock: stockValue });
+      await axios.put(`${BACKEND_URL}/inventory/${id}`, { stock: stockValue });
       alert("Stock updated successfully");
       fetchInventory();
       setEditStock(prev => {

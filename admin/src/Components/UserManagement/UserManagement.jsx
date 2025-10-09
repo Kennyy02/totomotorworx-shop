@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import "./UserManagement.css"; // Make sure this CSS file exists for styling
 
 // Define your API base URL
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);

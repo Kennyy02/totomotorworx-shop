@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import './ListProduct.css';
 import cross_icon from '../../assets/cross_icon.png';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 const ListProduct = () => {
     const [allproducts, setAllProducts] = useState([]);
     const [page, setPage] = useState(1);
@@ -12,7 +14,7 @@ const ListProduct = () => {
     const fetchInfo = useCallback(async () => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:4000/products_paginated?page=${page}&limit=${productsPerPage}`);
+            const res = await fetch(`${BACKEND_URL}/products_paginated?page=${page}&limit=${productsPerPage}`);
             const data = await res.json();
             
             // Handle API errors

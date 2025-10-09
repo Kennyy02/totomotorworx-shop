@@ -12,7 +12,9 @@ import {
 import { io } from "socket.io-client";
 import "./CartAnalytics.css";
 
-const socket = io("http://localhost:4000");
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+const socket = io(BACKEND_URL);
 
 const CartAnalytics = () => {
   const [analyticsData, setAnalyticsData] = useState([]);
@@ -20,7 +22,7 @@ const CartAnalytics = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch("http://localhost:4000/cart-analytics");
+      const response = await fetch(`${BACKEND_URL}/cart-analytics`);
       const data = await response.json();
       setAnalyticsData(data);
     } catch (error) {
