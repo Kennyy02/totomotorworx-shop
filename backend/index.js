@@ -13,17 +13,33 @@ const bodyParser = require("body-parser");
 
 require('dotenv').config();
 
+const allowedOrigins = [
+  'http://localhost:5173',                       // local dev
+  'https://frontend-production-5042.up.railway.app', // frontend prod
+  'https://admin-production-7904.up.railway.app'     // admin prod
+];
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL, // your React app URL
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
-  },
+    credentials: true
+  }
 });
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // allow non-browser clients
+    if(allowedOrigins.indexOf(origin) === -1){
+      return callback(new Error('CORS policy violation'), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL Connection
