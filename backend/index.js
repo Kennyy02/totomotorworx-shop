@@ -410,20 +410,60 @@ app.post('/addtocart', fetchUser, (req, res) => {
 });
 
 // --- Cart Analytics Endpoint ---
+// --- Cart Analytics Endpoint (JSON-based) ---
 app.get("/cart-analytics", (req, res) => {
-  const query = `
-    SELECT p.id, p.name, p.image, COUNT(c.product_id) AS addedCount
-    FROM cart c
-    JOIN products p ON c.product_id = p.id
-    GROUP BY c.product_id
-    ORDER BY addedCount DESC;
-  `;
-  db.query(query, (err, results) => {
+  // Fetch all users and their cartData
+  db.query("SELECT cartData FROM users", (err, results) => {
     if (err) {
       console.error("❌ Error fetching analytics:", err);
       return res.status(500).json({ error: "Database error" });
     }
-    res.json(results);
+
+    const productCounts = {};
+
+    // Loop through all users and count products
+    results.forEach(user => {
+      const cart = JSON.parse(user.cartData || "{}");
+      for (const productId in cart) {
+        if (cart.hasOwnProperty(productId)) {
+          productCounts[productId] = (productCounts[productId] || 0) + cart[productId];
+        }
+      }
+    });
+
+    // Convert to array for easier sorting
+    const countsArray = Object.keys(productCounts).map(productId => ({
+      product_id: parseInt(productId),
+      addedCount: productCounts[productId]
+    }));
+
+    // Sort by addedCount descending
+    countsArray.sort((a, b) => b.addedCount - a.addedCount);
+
+    // Fetch product details for each product_id
+    if (countsArray.length === 0) return res.json([]); // no data
+
+    const productIds = countsArray.map(p => p.product_id);
+    const placeholders = productIds.map(() => '?').join(',');
+
+    const query = `SELECT id, name, image FROM product WHERE id IN (${placeholders})`;
+
+    db.query(query, productIds, (err, productResults) => {
+      if (err) {
+        console.error("❌ Error fetching product details:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      // Merge product info with counts
+      const finalResults = countsArray.map(item => {
+        const product = productResults.find(p => p.id === item.product_id);
+        return product
+          ? { ...product, addedCount: item.addedCount }
+          : { product_id: item.product_id, name: "Unknown", image: null, addedCount: item.addedCount };
+      });
+
+      res.json(finalResults);
+    });
   });
 });
 
