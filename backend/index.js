@@ -30,35 +30,42 @@ const io = new Server(server, {
 
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true); // allow non-browser clients
-    if(allowedOrigins.indexOf(origin) === -1){
-      return callback(new Error('CORS policy violation'), false);
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
   credentials: true
-}));
-app.use(bodyParser.urlencoded({ extended: true }));
+};
+
+app.use(cors(corsOptions));
 
 // MySQL Connection
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
   port: process.env.MYSQLPORT,
-  decimalNumbers: true,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  decimalNumbers: true
 });
 
-db.connect((err) => {
+db.getConnection((err, connection) => {
   if (err) {
-    console.error("Failed to connect to MySQL:", err);
+    console.error("❌ Failed to connect to MySQL:", err);
     process.exit(1);
   }
-  console.log("Connected to MySQL database.");
+  console.log("✅ Connected to MySQL database.");
+  connection.release();
 });
+
 
 // Multer storage config
 const storage = multer.diskStorage({
