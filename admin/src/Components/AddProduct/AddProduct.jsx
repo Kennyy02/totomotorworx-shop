@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import './AddProduct.css'
 import upload_area from '../../assets/upload_area.svg';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
 const AddProduct = () => {
 
     const [image, setImage] = useState(false);
@@ -38,7 +36,7 @@ const AddProduct = () => {
             let formData = new FormData();
             formData.append('product', image);
 
-            const uploadResponse = await fetch(`${BACKEND_URL}/upload`, {
+            const uploadResponse = await fetch('https://totomotorworx-shop-production.up.railway.app/upload', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -55,7 +53,7 @@ const AddProduct = () => {
             product.image = responseData.image_url;
 
             // --- 3. Add Product to Database ---
-            const addProductResponse = await fetch(`${BACKEND_URL}/addproduct`, {
+            const addProductResponse = await fetch('https://totomotorworx-shop-production.up.railway.app/addproduct', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -91,7 +89,7 @@ const AddProduct = () => {
     return (
         <div className='add-product'>
             <div className="addproduct-itemfield">
-                <p>Product title</p>
+                <p>Product/Service title</p>
                 <input value={productDetails.name} onChange={changeHandler} type="text" name='name' placeholder='Type here' />
             </div>
             <div className="addproduct-price">
@@ -105,7 +103,7 @@ const AddProduct = () => {
                 </div>
             </div>
             <div className="addproduct-itemfield">
-                <p>Product Category</p>
+                <p>Category</p>
                 <select value={productDetails.category} onChange={changeHandler} name="category" className='add-product-selector'>
                     <option value="tires">Tires</option>
                     <option value="grip">Grips</option>
@@ -113,6 +111,7 @@ const AddProduct = () => {
                     <option value="helmet">Helmets</option>
                     <option value="spray-paint">Spray Paint</option>
                     <option value="cable">Cable</option>
+                    <option value="service">Service</option>
                 </select>
             </div>
             <div className="addproduct-itemfield">

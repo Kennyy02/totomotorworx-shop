@@ -12,9 +12,7 @@ import {
 import { io } from "socket.io-client";
 import "./CartAnalytics.css";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-const socket = io(BACKEND_URL);
+const socket = io("https://totomotorworx-shop-production.up.railway.app");
 
 const CartAnalytics = () => {
   const [analyticsData, setAnalyticsData] = useState([]);
@@ -22,7 +20,7 @@ const CartAnalytics = () => {
 
   const fetchAnalytics = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/cart-analytics`);
+      const response = await fetch("https://totomotorworx-shop-production.up.railway.app/cart-analytics");
       const data = await response.json();
       setAnalyticsData(data);
     } catch (error) {
@@ -33,16 +31,13 @@ const CartAnalytics = () => {
   };
 
   useEffect(() => {
-    // Initial fetch
     fetchAnalytics();
 
-    // Listen for real-time updates from backend
     socket.on("cart-updated", () => {
-      console.log("🔁 Cart updated, refreshing chart...");
+      console.log("🔁 Cart updated — refreshing chart...");
       fetchAnalytics();
     });
 
-    // Cleanup socket connection
     return () => socket.off("cart-updated");
   }, []);
 

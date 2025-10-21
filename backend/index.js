@@ -7,33 +7,37 @@ const multer = require("multer");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const cors = require("cors");
-const mysql = require("mysql2");
+const mysql = require("mysql2"); // Use mysql2
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 
 require('dotenv').config();
 
+// --- Configuration for Deployment ---
 const allowedOrigins = [
-  'http://localhost:5173',                       // local dev
+  'http://localhost:5173', // local dev
   'https://frontend-production-5042.up.railway.app', // frontend prod
-  'https://admin-production-7904.up.railway.app'     // admin prod
+  'https://admin-production-7904.up.railway.app' // admin prod
 ];
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"], // Added PUT/DELETE for full CRUD
     credentials: true
   }
 });
 
 // Middleware
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -44,7 +48,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// MySQL Connection
+// MySQL Connection (using Pool for deployed environment)
 const db = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -60,6 +64,7 @@ const db = mysql.createPool({
 db.getConnection((err, connection) => {
   if (err) {
     console.error("❌ Failed to connect to MySQL:", err);
+    // Use process.exit(1) for critical failure in deployment
     process.exit(1);
   }
   console.log("✅ Connected to MySQL database.");
@@ -79,11 +84,38 @@ const upload = multer({ storage });
 
 app.use('/images', express.static('upload/images'));
 
+// JWT Middleware for User Authentication
+const fetchUser = (req, res, next) => {
+  const token = req.header('auth-token');
+  if (!token) return res.status(401).json({ errors: "Please authenticate using a valid token" });
+
+  try {
+    // The secret is 'secret_ecom' in your code
+    const data = jwt.verify(token, 'secret_ecom');
+    req.user = data.user;
+    next();
+  } catch (error) {
+    console.error("JWT verification error:", error.message);
+    res.status(401).json({ errors: "Invalid or expired token" });
+  }
+};
+
+const requireAdmin = (req, res, next) => {
+  if (!req.user || !req.user.isAdmin) {
+    return res.status(403).json({ error: "Access denied: Admins only" });
+  }
+  next();
+};
+
+
+// --- ROUTES ---
+
 // Upload image
 app.post("/upload", upload.single('product'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: 0, message: "No file uploaded" });
   }
+  // Use BACKEND_URL from environment for deployment
   res.json({
     success: 1,
     image_url: `${process.env.BACKEND_URL}/images/${req.file.filename}`
@@ -96,6 +128,7 @@ app.post("/addproduct", (req, res) => {
   const date = new Date();
   const available = true;
 
+  // Since you are manually managing IDs, keep this logic
   const getLastIdQuery = "SELECT id FROM product ORDER BY id DESC LIMIT 1";
   db.query(getLastIdQuery, (err, results) => {
     if (err) return res.status(500).json({ error: "Failed to fetch latest product ID" });
@@ -111,25 +144,19 @@ app.post("/addproduct", (req, res) => {
       newId, name, image, category, new_price, old_price, date, available
     ], (err, result) => {
       if (err) return res.status(500).json({ error: "Failed to insert product" });
-      res.json({ success: true, message: "Product added", insertId: result.insertId });
+      // result.insertId is generally 0 for mysql2 pool when explicitly inserting id
+      res.json({ success: true, message: "Product added", insertId: newId });
     });
   });
 });
 
 // Get all products (legacy route, not used for pagination)
 app.get("/products", (req, res) => {
-  console.log("GET /products called"); // Debug log
   db.query("SELECT * FROM product", (err, result) => {
-    if (err) {
-      console.error("Error fetching products:", err);
-      // Show full SQL error in response (temporarily)
-      return res.status(500).json({ error: err.message });
-    }
+    if (err) return res.status(500).json({ error: err.message });
     res.json(result);
   });
 });
-
-
 
 // Paginated products endpoint
 app.get("/products_paginated", (req, res) => {
@@ -173,21 +200,17 @@ app.post('/removeproduct', (req, res) => {
 });
 
 // Signup (with bcrypt password hashing)
-// --- Replace your existing /signup route with this block ---
 app.post('/signup', async (req, res) => {
     const { username, email, password, consent } = req.body;
 
-    // Basic input validation
     if (!username || !email || !password) {
         return res.status(400).json({ success: false, errors: "Missing required fields" });
     }
 
-    // Consent is required
     if (consent !== true) {
         return res.status(400).json({ success: false, errors: "You must agree to the Terms and Privacy Statement to register." });
     }
 
-    // Password policy enforcement (same as client)
     const pwdRe = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=[\]{};':"\\|,.<>/?]).{8,}$/;
     if (!pwdRe.test(password)) {
         return res.status(400).json({ success: false, errors: "Password does not meet complexity requirements." });
@@ -205,7 +228,6 @@ app.post('/signup', async (req, res) => {
 
         try {
             const hashedPassword = await bcrypt.hash(password, 10);
-            // initialize empty cart; avoid big prepopulated object for performance
             const cartData = JSON.stringify({});
 
             db.query(
@@ -217,6 +239,7 @@ app.post('/signup', async (req, res) => {
                         return res.status(500).json({ success: false, errors: "Error inserting user" });
                     }
 
+                    // Use result.insertId for the user's ID
                     const token = jwt.sign({ user: { id: result.insertId, isAdmin: false } }, 'secret_ecom', { expiresIn: '7d' });
                     res.json({ success: true, 'auth-token': token });
                 }
@@ -229,54 +252,58 @@ app.post('/signup', async (req, res) => {
 });
 
 // Login Route (with bcrypt password comparison)
-app.post('/login', (req, res) => {
-    const { email, password } = req.body;
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password)
+    return res.status(400).json({ success: false, errors: "Email and password required" });
 
-    if (!email || !password) {
-        return res.status(400).json({ success: false, errors: "Email and password are required" });
+  db.query("SELECT * FROM users WHERE email = ?", [email], async (err, results) => {
+    if (err) return res.status(500).json({ success: false, errors: "Database error" });
+    if (results.length === 0)
+      return res.status(400).json({ success: false, errors: "Wrong email" });
+
+    const user = results[0];
+
+    // BLOCK disabled accounts (from your local code)
+    if (user.disabled === 1) {
+      return res
+        .status(403)
+        .json({ success: false, errors: "Your account has been disabled." });
     }
 
-    db.query("SELECT * FROM users WHERE email = ?", [email], async (err, results) => {
-        if (err) return res.status(500).json({ success: false, errors: "Database error" });
+    try {
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (!validPassword)
+        return res.status(400).json({ success: false, errors: "Wrong password" });
 
-        if (results.length === 0) {
-            return res.status(400).json({ success: false, errors: "Wrong Email ID" });
-        }
-
-        const user = results[0];
-        try {
-            const validPassword = await bcrypt.compare(password, user.password);
-            if (!validPassword) {
-                return res.status(400).json({ success: false, errors: "Wrong Password" });
-            }
-
-            const isAdmin = user.isAdmin === 1 || user.isAdmin === true;
-            const token = jwt.sign(
-                { user: { id: user.id, isAdmin } },
-                'secret_ecom',
-                { expiresIn: '7d' }
-            );
-            res.json({ success: true, 'auth-token': token });
-        } catch (compareErr) {
-            console.error("Password comparison error:", compareErr);
-            res.status(500).json({ success: false, errors: "Internal server error during password comparison" });
-        }
-    });
+      const isAdmin = user.isAdmin === 1 || user.isAdmin === true;
+      const token = jwt.sign({ user: { id: user.id, isAdmin } }, "secret_ecom", {
+        expiresIn: "7d",
+      });
+      res.json({ success: true, "auth-token": token });
+    } catch {
+      res.status(500).json({ success: false, errors: "Server error" });
+    }
+  });
 });
 
 // --- Public User Management Routes (No Admin Login Required) ---
 // This endpoint is now public for fetching users
-app.get('/users', (req, res) => { // Removed fetchUser middleware
-  db.query("SELECT * FROM users", (err, results) => {
-    if (err) return res.status(500).json({ error: "Database query failed" });
-    res.json(results);
+app.get("/users", (req, res) => {
+  const sql = "SELECT * FROM users";
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Error fetching users:", err);
+      return res.status(500).json({ success: false, error: err.message });
+    }
+    res.json(result);
   });
 });
 
 // Paginated users endpoint
 app.get('/users_paginated', (req, res) => {
-  const page = parseInt(req.query.page) || 1;   // default page 1
-  const limit = parseInt(req.query.limit) || 10; // default 10 users per page
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
   const offset = (page - 1) * limit;
 
   const countQuery = "SELECT COUNT(*) AS total FROM users";
@@ -307,8 +334,49 @@ app.get('/users_paginated', (req, res) => {
   });
 });
 
+// ✅ Disable user (NEW)
+app.put("/users/disable/:id", (req, res) => {
+  const userId = req.params.id;
+  console.log("Disabling user ID:", userId);
 
-app.put('/users/:id', (req, res) => { // Removed fetchUser middleware
+  const sql = "UPDATE users SET disabled = TRUE WHERE id = ?";
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error("Error disabling user:", err);
+      return res.status(500).json({ success: false, error: err.message });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, message: "User disabled successfully" });
+  });
+});
+
+
+// ✅ Enable user (NEW)
+app.put("/users/enable/:id", (req, res) => {
+  const userId = req.params.id;
+  console.log("Enabling user ID:", userId);
+
+  const sql = "UPDATE users SET disabled = FALSE WHERE id = ?";
+  db.query(sql, [userId], (err, result) => {
+    if (err) {
+      console.error("Error enabling user:", err);
+      return res.status(500).json({ success: false, error: err.message });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, message: "User enabled successfully" });
+  });
+});
+
+
+app.put('/users/:id', (req, res) => {
   const { name, email, password } = req.body;
 
   db.query("SELECT password FROM users WHERE id = ?", [req.params.id], async (err, results) => {
@@ -319,6 +387,7 @@ app.put('/users/:id', (req, res) => { // Removed fetchUser middleware
     let hashedPassword = results[0].password;
     if (password) {
       try {
+        // Hash the new password if provided
         hashedPassword = await bcrypt.hash(password, 10);
       } catch (hashErr) {
         console.error("Error hashing new password:", hashErr);
@@ -326,8 +395,8 @@ app.put('/users/:id', (req, res) => { // Removed fetchUser middleware
       }
     }
 
-    db.query("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?", 
-      [name, email, hashedPassword, req.params.id], 
+    db.query("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?",
+      [name, email, hashedPassword, req.params.id],
       (updateErr) => {
         if (updateErr) {
           console.error("Error updating user:", updateErr);
@@ -339,13 +408,14 @@ app.put('/users/:id', (req, res) => { // Removed fetchUser middleware
   });
 });
 
-app.delete('/users/:id', (req, res) => { // Removed fetchUser middleware
+app.delete('/users/:id', (req, res) => {
   db.query("DELETE FROM users WHERE id = ?", [req.params.id], (err) => {
     if (err) return res.status(500).json({ error: "Failed to delete user" });
     res.json({ success: true });
   });
 });
 
+// Inventory
 app.get("/inventory", (req, res) => {
     db.query("SELECT * FROM product", (err, results) => {
         if (err) {
@@ -377,49 +447,70 @@ app.put("/inventory/:id", (req, res) => {
 });
 
 
-// Cart endpoints
-const fetchUser = (req, res, next) => {
-    const token = req.header('auth-token');
-    if (!token) return res.status(401).json({ errors: "Please authenticate using a valid token" });
+// --- Cart Endpoints (Using JSON `cartData` on `users` table) ---
+// Note: The /add-to-cart and /remove-from-cart routes that directly query the `cart` table
+// are left out as they seem to conflict with the primary JSON-based cart logic.
 
-    try {
-        const data = jwt.verify(token, 'secret_ecom');
-        req.user = data.user;
-        next();
-    } catch (error) {
-        console.error("JWT verification error:", error.message);
-        res.status(401).json({ errors: "Invalid or expired token" });
-    }
-};
+// ✅ Add product to cart (JSON-based, using fetchUser)
+app.post("/addtocart", fetchUser, (req, res) => {
+  const { itemId } = req.body;
+  if (itemId == null) return res.status(400).json({ error: "Item ID required" });
 
-const requireAdmin = (req, res, next) => {
-    if (!req.user || !req.user.isAdmin) {
-        return res.status(403).json({ error: "Access denied: Admins only" });
-    }
-    next();
-};
+  // Use req.user.id from JWT payload
+  db.query("SELECT cartData FROM users WHERE id = ?", [req.user.id], (err, results) => {
+    if (err || results.length === 0) return res.status(500).json({ error: "User not found" });
 
-app.post('/addtocart', fetchUser, (req, res) => {
+    let cartData = JSON.parse(results[0].cartData || "{}"); // Handle null/empty cartData
+    cartData[itemId] = (cartData[itemId] || 0) + 1;
+
+    db.query("UPDATE users SET cartData = ? WHERE id = ?", [JSON.stringify(cartData), req.user.id], (err) => {
+      if (err) return res.status(500).json({ error: "Failed to update cart" });
+
+      io.emit("cart-updated"); // 🔥 realtime event
+      res.json({ success: true, message: "Item added to cart" });
+    });
+  });
+});
+
+// ✅ Remove product from cart (JSON-based, using fetchUser)
+app.post("/removefromcart", fetchUser, (req, res) => {
   const { itemId } = req.body;
   if (itemId == null) return res.status(400).json({ error: "Item ID required" });
 
   db.query("SELECT cartData FROM users WHERE id = ?", [req.user.id], (err, results) => {
     if (err || results.length === 0) return res.status(500).json({ error: "User not found" });
 
-    let cartData = JSON.parse(results[0].cartData);
-    cartData[itemId] = (cartData[itemId] || 0) + 1;
+    let cartData = JSON.parse(results[0].cartData || "{}");
+
+    if (cartData[itemId] && cartData[itemId] > 0) cartData[itemId] -= 1;
+    if (cartData[itemId] <= 0) delete cartData[itemId]; // cleanup empty entries
 
     db.query("UPDATE users SET cartData = ? WHERE id = ?", [JSON.stringify(cartData), req.user.id], (err) => {
       if (err) return res.status(500).json({ error: "Failed to update cart" });
-      res.json({ success: true, message: "Item added to cart" });
+
+      io.emit("cart-updated"); // 🔥 realtime event
+      res.json({ success: true, message: "Item removed from cart" });
     });
   });
 });
 
-// --- Cart Analytics Endpoint ---
-// --- Cart Analytics Endpoint (JSON-based) ---
+// ✅ Get cart data (JSON-based, using fetchUser)
+app.post("/getcart", fetchUser, (req, res) => {
+  db.query("SELECT cartData FROM users WHERE id = ?", [req.user.id], (err, results) => {
+    if (err || results.length === 0) return res.status(500).json({ error: "User not found" });
+
+    try {
+      const cartData = JSON.parse(results[0].cartData || "{}");
+      res.json(cartData);
+    } catch {
+      res.json({});
+    }
+  });
+});
+
+// --- Cart Analytics Endpoint (Combined Logic) ---
 app.get("/cart-analytics", (req, res) => {
-  // Fetch all users and their cartData
+  // Logic from the deployed code which manually parses and aggregates JSON cartData
   db.query("SELECT cartData FROM users", (err, results) => {
     if (err) {
       console.error("❌ Error fetching analytics:", err);
@@ -428,7 +519,6 @@ app.get("/cart-analytics", (req, res) => {
 
     const productCounts = {};
 
-    // Loop through all users and count products
     results.forEach(user => {
       const cart = JSON.parse(user.cartData || "{}");
       for (const productId in cart) {
@@ -438,17 +528,14 @@ app.get("/cart-analytics", (req, res) => {
       }
     });
 
-    // Convert to array for easier sorting
     const countsArray = Object.keys(productCounts).map(productId => ({
       product_id: parseInt(productId),
       addedCount: productCounts[productId]
     }));
 
-    // Sort by addedCount descending
     countsArray.sort((a, b) => b.addedCount - a.addedCount);
 
-    // Fetch product details for each product_id
-    if (countsArray.length === 0) return res.json([]); // no data
+    if (countsArray.length === 0) return res.json([]);
 
     const productIds = countsArray.map(p => p.product_id);
     const placeholders = productIds.map(() => '?').join(',');
@@ -461,7 +548,6 @@ app.get("/cart-analytics", (req, res) => {
         return res.status(500).json({ error: "Database error" });
       }
 
-      // Merge product info with counts
       const finalResults = countsArray.map(item => {
         const product = productResults.find(p => p.id === item.product_id);
         return product
@@ -474,73 +560,14 @@ app.get("/cart-analytics", (req, res) => {
   });
 });
 
-// ✅ ROUTE: Add product to cart (triggers realtime update)
-app.post("/add-to-cart", (req, res) => {
-  const { product_id, user_id } = req.body;
-
-  if (!product_id || !user_id) {
-    return res.status(400).json({ error: "Missing product_id or user_id" });
-  }
-
-  const query = "INSERT INTO cart (product_id, user_id) VALUES (?, ?)";
-  db.query(query, [product_id, user_id], (err) => {
-    if (err) {
-      console.error("❌ Error adding to cart:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
-
-    console.log(`🛒 Product ${product_id} added by user ${user_id}`);
-
-    // 🔥 Emit realtime update event to all clients
-    io.emit("cart-updated");
-
-    res.json({ message: "Product added to cart successfully" });
-  });
-});
-
-// ✅ SOCKET.IO CONNECTION
-io.on("connection", (socket) => {
-  console.log("🟢 Client connected:", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("🔴 Client disconnected:", socket.id);
-  });
-});
-
-
-app.post('/removefromcart', fetchUser, (req, res) => {
-  const { itemId } = req.body;
-  if (itemId == null) return res.status(400).json({ error: "Item ID required" });
-
-  db.query("SELECT cartData FROM users WHERE id = ?", [req.user.id], (err, results) => {
-    if (err || results.length === 0) return res.status(500).json({ error: "User not found" });
-
-    let cartData = JSON.parse(results[0].cartData);
-    if (cartData[itemId] && cartData[itemId] > 0) cartData[itemId] -= 1;
-
-    db.query("UPDATE users SET cartData = ? WHERE id = ?", [JSON.stringify(cartData), req.user.id], (err) => {
-      if (err) return res.status(500).json({ error: "Failed to update cart" });
-      res.json({ success: true, message: "Item removed from cart" });
-    });
-  });
-});
-
-app.post('/getcart', fetchUser, (req, res) => {
-  db.query("SELECT cartData FROM users WHERE id = ?", [req.user.id], (err, results) => {
-    if (err || results.length === 0) return res.status(500).json({ error: "User not found" });
-
-    const cartData = JSON.parse(results[0].cartData);
-    res.json(cartData);
-  });
-});
 
 // New collections
 app.get('/newcollections', (req, res) => {
   const query = "SELECT * FROM product ORDER BY id DESC LIMIT 8";
   db.query(query, (err, results) => {
     if (err) return res.status(500).json({ error: "Failed to fetch new collections" });
-    // Replace: res.json(results.reverse());
-    res.json(results); // ✅ Send results directly
+    // Keep results as is (ORDER BY id DESC)
+    res.json(results);
   });
 });
 
@@ -558,7 +585,17 @@ app.get("/", (req, res) => {
   res.send("Express App is Running");
 });
 
+// ✅ SOCKET.IO CONNECTION
+io.on("connection", (socket) => {
+  console.log("🟢 Client connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("🔴 Client disconnected:", socket.id);
+  });
+});
+
+
 // Start the combined HTTP/Socket.IO server
-server.listen(port, () => { // <--- USE server.listen() INSTEAD
-    console.log(`Server is running on port ${port}`);
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

@@ -1,42 +1,25 @@
 import React, { useEffect, useState, useCallback } from "react";
-import "./UserManagement.css"; // Make sure this CSS file exists for styling
+import "./UserManagement.css";
 
-// Define your API base URL
-const API_BASE = import.meta.env.VITE_BACKEND_URL;
+const API_BASE = "https://totomotorworx-shop-production.up.railway.app";
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
-  const [editingUserId, setEditingUserId] = useState(null);
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showPasswordInput, setShowPasswordInput] = useState(false);
 
-  // Pagination states
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5; // Change this number for different page sizes
+  const usersPerPage = 5;
 
-  // fetchUsers is useCallback memoized
+  // Fetch all users
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/users`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(
-          errData.error ||
-            errData.errors ||
-            `Failed to fetch users: ${res.statusText}`
-        );
-      }
-
+      const res = await fetch(`${API_BASE}/users`);
+      if (!res.ok) throw new Error(`Failed to fetch users: ${res.statusText}`);
       const data = await res.json();
-      // Ensure password is obfuscated
       const processedUsers = data.map((user) => ({
         ...user,
         password: "******",
@@ -54,97 +37,31 @@ export default function UserManagement() {
     fetchUsers();
   }, [fetchUsers]);
 
-  const startEdit = (user) => {
-    setEditingUserId(user.id);
-    setFormData({ name: user.name, email: user.email, password: "" });
-    setShowPasswordInput(false);
-    setError(null);
-  };
-
-  const cancelEdit = () => {
-    setEditingUserId(null);
-    setFormData({ name: "", email: "", password: "" });
-    setShowPasswordInput(false);
-    setError(null);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const submitEdit = async () => {
-    if (!formData.name.trim() || !formData.email.trim()) {
-      setError("Name and Email are required to update a user.");
-      return;
-    }
-
-    setError(null);
-    const payload = {
-      name: formData.name,
-      email: formData.email,
-    };
-
-    if (formData.password.trim()) {
-      payload.password = formData.password;
-    }
-
+  // Disable user
+  const disableUser = async (id) => {
+    if (!window.confirm("Disable this user? They will not be able to log in.")) return;
     try {
-      const res = await fetch(`${API_BASE}/users/${editingUserId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(
-          errData.error ||
-            errData.errors ||
-            `Failed to update user: ${res.statusText}`
-        );
-      }
-
-      alert("User updated successfully!");
-      cancelEdit();
+      const res = await fetch(`${API_BASE}/users/disable/${id}`, { method: "PUT" });
+      if (!res.ok) throw new Error("Failed to disable user");
+      alert("User disabled successfully!");
       fetchUsers();
     } catch (err) {
-      console.error("Error updating user:", err);
-      setError(`Failed to update user: ${err.message}`);
+      console.error(err);
+      alert("Error disabling user");
     }
   };
 
-  const deleteUser = async (id) => {
-    if (
-      !window.confirm(
-        "Are you sure you want to delete this user? This action cannot be undone."
-      )
-    ) {
-      return;
-    }
-
-    setError(null);
+  // Enable user
+  const enableUser = async (id) => {
+    if (!window.confirm("Re-enable this user account?")) return;
     try {
-      const res = await fetch(`${API_BASE}/users/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(
-          errData.error ||
-            errData.errors ||
-            `Failed to delete user: ${res.statusText}`
-        );
-      }
-      alert("User deleted successfully!");
+      const res = await fetch(`${API_BASE}/users/enable/${id}`, { method: "PUT" });
+      if (!res.ok) throw new Error("Failed to enable user");
+      alert("User enabled successfully!");
       fetchUsers();
     } catch (err) {
-      console.error("Error deleting user:", err);
-      setError(`Failed to delete user: ${err.message}`);
+      console.error(err);
+      alert("Error enabling user");
     }
   };
 
@@ -159,7 +76,6 @@ export default function UserManagement() {
       <h2>User Management</h2>
 
       {error && <p className="error-message">{error}</p>}
-
       {loading ? (
         <p>Loading users...</p>
       ) : users.length === 0 && !error ? (
@@ -174,104 +90,49 @@ export default function UserManagement() {
                 <th>Email</th>
                 <th>Password</th>
                 <th>Registered Date</th>
-                <th>Actions</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {currentUsers.map((user) =>
-                editingUserId === user.id ? (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        placeholder="Name"
-                        required
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Email"
-                        required
-                      />
-                    </td>
-                    <td>
+              {currentUsers.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>{user.password}</td>
+                  <td>{new Date(user.date).toLocaleDateString()}</td>
+                  <td>{user.disabled ? "Disabled" : "Active"}</td>
+                  <td>
+                    {user.disabled ? (
                       <button
-                        className="change-password-toggle"
-                        onClick={() =>
-                          setShowPasswordInput(!showPasswordInput)
-                        }
+                        className="enable-button"
+                        onClick={() => enableUser(user.id)}
                       >
-                        {showPasswordInput ? "Hide Password" : "Change Password"}
+                        Enable
                       </button>
-                      {showPasswordInput && (
-                        <div className="password-input-group">
-                          <input
-                            type="password"
-                            name="password"
-                            placeholder="New Password (optional)"
-                            value={formData.password}
-                            onChange={handleChange}
-                            autoComplete="new-password"
-                          />
-                        </div>
-                      )}
-                    </td>
-                    <td>{new Date(user.date).toLocaleDateString()}</td>
-                    <td>
-                      <div className="action-buttons">
-                        <button onClick={submitEdit} className="save-button">
-                          Save
-                        </button>
-                        <button onClick={cancelEdit} className="cancel-button">
-                          Cancel
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.password}</td>
-                    <td>{new Date(user.date).toLocaleDateString()}</td>
-                    <td>
+                    ) : (
                       <button
-                        onClick={() => startEdit(user)}
-                        className="edit-button"
+                        className="disable-button"
+                        onClick={() => disableUser(user.id)}
                       >
-                        Edit
+                        Disable
                       </button>
-                      <button
-                        onClick={() => deleteUser(user.id)}
-                        className="delete-button"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                )
-              )}
+                    )}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
 
-          {/* Pagination controls */}
+          {/* Pagination */}
           <div className="pagination">
             <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}
             >
               Previous
             </button>
-
             {[...Array(totalPages)].map((_, index) => (
               <button
                 key={index}
@@ -281,11 +142,8 @@ export default function UserManagement() {
                 {index + 1}
               </button>
             ))}
-
             <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
               Next
