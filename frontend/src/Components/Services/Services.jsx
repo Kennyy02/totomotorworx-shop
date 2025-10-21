@@ -1,18 +1,18 @@
-// File: Services.jsx
-
-import React, { useContext } from "react"; // ⬅️ IMPORT useContext
+import React, { useContext } from "react";
 import "./Services.css";
-import { Wrench, Droplet, Filter, CircleDot, ShoppingCart } from "lucide-react"; // ⬅️ IMPORT ShoppingCart
-import { HomeContext } from "../../Context/HomeContext"; // ⬅️ IMPORT HomeContext
+// 💡 Import Link for routing
+import { Link } from 'react-router-dom'; 
+import { Wrench, Droplet, Filter, CircleDot, ShoppingCart } from "lucide-react"; 
+import { HomeContext } from "../../Context/HomeContext";
 
+// NOTE: Ensure this list exactly matches the servicesList in HomeContext.jsx
 const servicesList = [
-  // 💡 CRITICAL: Add id and price to match the cart logic in HomeContext
   {
-    id: 9001, // ⬅️ Assign a unique, high ID to avoid collision with 'all_product'
+    id: 9001, 
     icon: <Droplet size={40} />,
-    title: "Oil Change Service",
+    title: "Oil Change Service", // Use "Service" suffix to distinguish from products
     desc: "Keep your engine running smooth with premium oil service.",
-    new_price: 35.00, // ⬅️ Use 'new_price' to align with HomeContext
+    new_price: 35.00,
   },
   {
     id: 9002,
@@ -38,8 +38,7 @@ const servicesList = [
 ];
 
 const Services = () => {
-  // ⬅️ ACCESS addToCart from context
-  const { addToCart } = useContext(HomeContext); 
+  const { addToCart } = useContext(HomeContext);
 
   return (
     <section className="services">
@@ -52,25 +51,35 @@ const Services = () => {
       </div>
       <div className="services-grid">
         {servicesList.map((service) => (
-          // Use 'service.id' as the key
-          <div key={service.id} className="service-card">
-            <div className="service-icon">{service.icon}</div>
-            <h3>{service.title}</h3>
-            <p>{service.desc}</p>
-            
-            {/* Display Price */}
-            <p className="service-price">
-              Price: ₱{service.new_price.toFixed(2)}
-            </p>
-            
-            {/* ⬅️ Add to Cart Button */}
-            <button
-              className="add-to-cart-btn"
-              onClick={() => addToCart(service.id)} // Pass the service's ID
-            >
-              <ShoppingCart size={18} /> Add to Cart
-            </button>
-          </div>
+          // 💡 Wrap the service card in a Link component
+          // The 'to' path matches the product route structure: /product/:productId
+          <Link 
+            key={service.id} 
+            to={`/product/${service.id}`} 
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <div className="service-card">
+              <div className="service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.desc}</p>
+              
+              <p className="service-price">
+                Price: ₱{service.new_price.toFixed(2)}
+              </p>
+              
+              {/* Optional: Add to Cart button can remain, or be moved to the detail page */}
+              <button
+                className="add-to-cart-btn"
+                // Stop the link navigation when button is clicked
+                onClick={(e) => {
+                    e.preventDefault(); 
+                    addToCart(service.id);
+                }} 
+              >
+                <ShoppingCart size={18} /> Add to Cart
+              </button>
+            </div>
+          </Link>
         ))}
       </div>
     </section>
