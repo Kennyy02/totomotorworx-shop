@@ -1,58 +1,4 @@
-/* --- Corrected Dropdown Styles --- */
-/* The container for the dropdown list item */
-.dropdown-container {
-  position: relative;
-  display: inline-block;
-  margin-top: 20px;
-}
-
-/* The dropdown content (hidden by default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #ffffff;
-  min-width: 160px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1;
-  top: 100%;
-  left: 0;
-  border-radius: 8px;
-  padding: 10px 0;
-  list-style: none;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-/* The links inside the dropdown */
-.dropdown-content a {
-  color: #2c3e50;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  white-space: nowrap;
-  transition: background-color 0.2s, color 0.2s;
-  border-radius: 4px;
-}
-
-.dropdown-content a:hover {
-  background-color: #3498db;
-  color: #ffffff;
-}
-
-/* Show the dropdown menu on hover */
-.dropdown-container:hover .dropdown-content {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Ensure the main link is styled properly on hover too */
-.dropdown-container:hover > a {
-  color: #ff6b6b;
-}
-
-/* --- Your Existing Navbar Styles (Corrected for Horizontal Mobile) --- */
+/* --- Navbar Container --- */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -62,9 +8,10 @@
 }
 
 .nav-dropdown {
-  display: none; /* Hide the dropdown icon as it's not needed for a horizontal menu */
+  display: none;
 }
 
+/* --- Logo Section --- */
 .nav-logo {
   display: flex;
   align-items: center;
@@ -89,6 +36,7 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* --- Navigation Menu --- */
 .nav-menu {
   display: flex;
   align-items: center;
@@ -101,7 +49,9 @@
   padding: 0;
 }
 
+/* ✅ CRITICAL FIX: Position relative for li and consistent padding */
 .nav-menu > li {
+  position: relative; /* Makes hr position relative to this element */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,26 +59,84 @@
   gap: 2px;
   cursor: pointer;
   transition: color 0.3s ease;
+  padding: 10px 0; /* ✅ Consistent padding keeps all items same height */
 }
 
 .nav-menu > li:hover {
   color: #ff6b6b;
 }
 
-/* Animated underline effect */
+.nav-menu a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ✅ CRITICAL FIX: Absolute positioning for hr */
 .nav-menu hr {
+  position: absolute; /* ✅ Takes hr out of document flow */
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   border: none;
-  width: 0;
+  width: 80%;
   height: 3px;
   border-radius: 10px;
   background: #ff6b6b;
-  transition: width 0.3s ease;
+  margin: 0;
 }
 
-.nav-menu > li:hover hr {
-  width: 80%;
+/* --- Dropdown Container --- */
+.dropdown-container {
+  position: relative;
+  display: inline-block;
 }
 
+/* --- Dropdown Content --- */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 160px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  border-radius: 8px;
+  padding: 10px 0;
+  list-style: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  margin-top: 5px;
+}
+
+.dropdown-content a {
+  color: #2c3e50;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 4px;
+}
+
+.dropdown-content a:hover {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+/* Show dropdown on hover */
+.dropdown-container:hover .dropdown-content {
+  display: block;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.dropdown-container:hover > a {
+  color: #ff6b6b;
+}
+
+/* --- Login/Cart Section --- */
 .nav-login-cart {
   display: flex;
   align-items: center;
@@ -173,6 +181,7 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+/* --- Cart Count Badge --- */
 .nav-cart-count {
   width: 30px;
   height: 20px;
@@ -195,7 +204,7 @@
   100% { transform: scale(1); }
 }
 
-/* --- Corrected Media Queries (for horizontal menu) --- */
+/* --- Media Queries --- */
 @media (max-width: 1280px) {
   .navbar { padding: 12px 50px; }
   .nav-logo img { width: 50px; height: 50px; }
@@ -217,33 +226,27 @@
 @media (max-width: 800px) {
   .navbar {
     padding: 10px 20px;
-    flex-wrap: wrap; /* Allows items to wrap to the next line if space is limited */
+    flex-wrap: wrap;
     justify-content: space-between;
   }
-  .nav-dropdown, .nav-menu-visible { /* Removed these selectors to avoid conflicts */
-    display: none;
-  }
   .nav-menu {
-    /* Maintained horizontal layout by keeping flex-direction as row */
     flex-direction: row;
     justify-content: center;
-    gap: 15px; /* Reduced gap for smaller screens */
-    width: 100%; /* Ensure the menu takes up full width */
+    gap: 15px;
+    width: 100%;
     margin-top: 10px;
   }
   .nav-menu li {
     font-size: 12px;
+    padding: 8px 0;
   }
   .nav-login-cart {
-    gap: 10px; /* Reduced gap for smaller screens */
+    gap: 10px;
   }
   .nav-login-cart button {
     width: 60px;
     height: 25px;
     font-size: 12px;
-  }
-  .dropdown-container{
-    margin-top: -5px;
   }
   .nav-cart-count {
     transform: scale(0.8);
@@ -252,11 +255,10 @@
   }
 }
 
-
 @media (max-width: 500px) {
   .navbar {
     padding: 8px 15px;
-    flex-direction: column; /* Optional: stack items vertically if the row is too cluttered */
+    flex-direction: column;
     align-items: center;
     gap: 10px;
   }
@@ -268,6 +270,9 @@
     justify-content: space-around;
     gap: 5px;
     flex-wrap: wrap;
+  }
+  .nav-menu li {
+    padding: 6px 0;
   }
   .nav-login-cart {
     transform: scale(0.8);
