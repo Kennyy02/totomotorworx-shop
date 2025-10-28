@@ -1,93 +1,282 @@
+/* ============================================
+   CART ANALYTICS - Modern Design
+   ============================================ */
+
 .analytics-wrapper {
-  padding: 30px;
-  background: #fff;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1400px;
+  padding: 40px;
+  margin: 48px auto;
   border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  position: relative;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Decorative gradient top border */
+.analytics-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(135deg, #6079ff 0%, #7c5dff 100%);
+  border-radius: 16px 16px 0 0;
 }
 
 .analytics-wrapper h2 {
-  margin-bottom: 20px;
-  font-size: 22px;
+  margin: 0 0 32px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  letter-spacing: -0.5px;
   text-align: center;
-  color: #333;
 }
 
+/* Table Styles */
 .analytics-table {
   margin-bottom: 40px;
   overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .analytics-table table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 8px;
   text-align: left;
 }
 
-.analytics-table th,
-.analytics-table td {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 15px;
+.analytics-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .analytics-table th {
-  background-color: #f5f5f5;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  font-weight: 700;
+  font-size: 13px;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
 }
 
+.analytics-table th:first-child {
+  border-radius: 12px 0 0 12px;
+}
+
+.analytics-table th:last-child {
+  border-radius: 0 12px 12px 0;
+}
+
+.analytics-table td {
+  padding: 16px 20px;
+  background: #fafbfc;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  color: #6c757d;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.analytics-table tbody tr {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.analytics-table tbody tr:hover td {
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.analytics-table td:first-child {
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px 0 0 8px;
+}
+
+.analytics-table td:last-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0 8px 8px 0;
+}
+
+/* Rank Cell */
 .rank-cell {
-  font-weight: bold;
-  color: #4f46e5;
+  font-weight: 700;
+  font-size: 16px;
+  color: #6079ff;
 }
 
-.count-cell {
-  font-weight: bold;
-}
-
+/* Product Cell */
 .product-cell {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .product-cell img {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 8px;
   object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.analytics-table tbody tr:hover .product-cell img {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(96, 121, 255, 0.3);
+}
+
+.product-cell span {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Count Cell */
+.count-cell {
+  font-weight: 700;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+/* Custom Tooltip */
 .custom-tooltip {
-  background-color: white;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background-color: #ffffff;
+  padding: 16px 20px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
 }
 
 .tooltip-label {
-  margin: 0;
-  font-weight: bold;
-  margin-bottom: 4px;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  font-size: 15px;
+  color: #2c3e50;
 }
 
 .tooltip-value {
   margin: 0;
-  color: #4f46e5;
+  font-weight: 600;
+  font-size: 14px;
+  color: #6079ff;
 }
 
+/* Loading State */
 .loading-text {
   text-align: center;
-  padding: 40px;
+  padding: 60px 40px;
+  font-size: 16px;
+  color: #6c757d;
+  font-weight: 500;
 }
 
+/* Empty State */
 .empty-state {
   text-align: center;
-  padding: 40px;
-  color: #666;
+  padding: 60px 40px;
+  font-size: 16px;
+  color: #6c757d;
+  font-weight: 500;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 2px dashed rgba(0, 0, 0, 0.08);
 }
 
+/* Last Updated */
 .last-updated {
-  margin-top: 8px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 2px solid rgba(0, 0, 0, 0.08);
   font-size: 12px;
-  color: #666;
+  color: #6c757d;
   text-align: right;
+  font-weight: 500;
+}
+
+/* Responsive Chart Container */
+.analytics-wrapper .recharts-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .analytics-wrapper {
+    max-width: 95%;
+    padding: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .analytics-wrapper {
+    padding: 24px 16px;
+    margin: 24px 16px;
+  }
+
+  .analytics-wrapper h2 {
+    font-size: 22px;
+    margin-bottom: 24px;
+  }
+
+  .analytics-table th,
+  .analytics-table td {
+    padding: 12px 10px;
+    font-size: 12px;
+  }
+
+  .product-cell img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .rank-cell,
+  .count-cell {
+    font-size: 14px;
+  }
+
+  .loading-text,
+  .empty-state {
+    padding: 40px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Scrollbar Styling */
+.analytics-table::-webkit-scrollbar {
+  height: 8px;
+}
+
+.analytics-table::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 4px;
+}
+
+.analytics-table::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #6079ff 0%, #7c5dff 100%);
+  border-radius: 4px;
+}
+
+.analytics-table::-webkit-scrollbar-thumb:hover {
+  background: #4a63e0;
 }
