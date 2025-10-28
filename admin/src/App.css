@@ -1,85 +1,99 @@
 /*
   ==============================================
-  Global Variables & Resets
+  Application-Specific Layout & Utilities (App.css)
   ==============================================
 */
-:root {
-  --primary-color: #34495e;      /* Dark professional text color */
-  --secondary-color: #7f8c8d;    /* Muted text for paragraphs */
-  --accent-color: #3498db;       /* A clean, vibrant blue for accents */
-  --background-color: #f8f9fa;   /* Soft, light gray background */
-  --card-background: #ffffff;    /* Clean white for containers */
-  --border-color: #e0e6ed;       /* Light border for subtle separation */
-  --font-family: 'Inter', sans-serif; /* A modern, readable font */
-}
 
-/* Global body and typography settings */
-body {
-  margin: 0;
-  font-family: var(--font-family);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background-color);
-  color: var(--primary-color);
-  line-height: 1.6;
-}
-
-/* Base root container */
+/* Base root container for the overall application layout */
 #root {
-  max-width: 1200px;
+  max-width: 1400px; /* Wider container for Admin panel space */
   margin: 0 auto;
-  padding: 4rem 2rem; /* Increased padding for more space */
-  text-align: center;
+  padding: 24px 16px; /* Reduced top/bottom padding for a better fit */
+  text-align: left; /* Aligns text left for better admin UI */
 }
 
 /*
   ==============================================
   Reusable Components & Utility Classes
+  (These classes use the variables now defined in index.css)
   ==============================================
 */
 
-/* Card component for content blocks */
+/* Card component for content blocks - UNIFIED MODERN STYLE */
 .card {
-  background-color: var(--card-background);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  padding: 2.5rem;
-  margin-bottom: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 40px; 
+  margin-bottom: 32px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative header line for cards (New modern touch) */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-gradient);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Slightly stronger hover shadow */
 }
 
-/* A clean, modern button style */
+/* A clean, modern button style - UNIFIED MODERN STYLE */
 .button {
   display: inline-block;
-  padding: 12px 24px;
+  padding: 12px 28px;
   border-radius: 50px;
-  background-color: var(--accent-color);
+  background: var(--primary-gradient);
   color: white;
   font-size: 16px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   border: none;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: var(--shadow-primary);
+  transition: var(--transition);
 }
 
 .button:hover {
-  background-color: #2980b9;
   transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(96, 121, 255, 0.4);
+}
+
+.button:active {
+  transform: translateY(0);
 }
 
 /* Read more link style */
 .read-the-docs {
-  color: var(--secondary-color);
+  color: var(--text-secondary);
   font-size: 14px;
-  transition: color 0.3s ease;
+  transition: var(--transition);
 }
 
 .read-the-docs:hover {
-  color: var(--accent-color);
+  color: var(--primary-color);
+}
+
+/* Responsive Overrides for root container */
+@media (max-width: 800px) {
+  #root {
+    padding: 24px 16px;
+  }
+  .card {
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
 }
