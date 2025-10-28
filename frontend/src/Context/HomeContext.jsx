@@ -20,7 +20,7 @@ const HomeContextProvider = (props) => {
  const syncCartToAnalytics = async (productId, userId, action) => {
     try {
       // Using API_URL for deployed backend connection
-      await fetch(`${API_URL}/${action === "add" ? "add-to-cart" : "remove-from-cart"}`, {
+      await fetch(`${API_URL}/${action === "add" ? "addtocart" : "removefromcart"}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ product_id: productId, user_id: userId }),
