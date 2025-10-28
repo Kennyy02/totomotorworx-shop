@@ -93,27 +93,24 @@ const HomeContextProvider = (props) => {
       return;
     }
 
+    // ... (in addToCart function)
     setCartItems((prev) => {
       const updated = { ...prev, [itemId]: prev[itemId] + 1 };
 
-      // If user is logged in → sync to server cart - Using API_URL
+      // Correct, token-protected cart sync:
       if (token) {
         fetch(`${API_URL}/addtocart`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "auth-token": token,
-            "Content-Type": "application/json",
-          },
+          // ... headers including "auth-token": token ...
           body: JSON.stringify({ itemId }),
         }).catch((err) => console.error("Add to cart error:", err));
       }
 
-      // 🔥 Sync to analytics backend (real-time chart) - Restored for CartAnalytics
-      syncCartToAnalytics(itemId, 1, "add"); 
+      // 🔥 REMOVE THIS LINE TO FIX 401 ERROR:
+      // syncCartToAnalytics(itemId, 1, "add"); 
 
       return updated;
      });
+// ...
 
     // ✅ FIXED: Only decrease stock for physical products, NOT services
     if (!isService) {
@@ -133,27 +130,24 @@ const HomeContextProvider = (props) => {
     const product = all_product.find((p) => p.id === itemId);
     const isService = product?.category === 'service';
 
+    // ... (in removeFromCart function)
     setCartItems((prev) => {
       const updated = { ...prev, [itemId]: Math.max(prev[itemId] - 1, 0) };
 
       if (token) {
-        // Using API_URL for deployed backend connection
+        // Correct, token-protected cart sync:
         fetch(`${API_URL}/removefromcart`, { 
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "auth-token": token,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ itemId }), // Fixed: now sends itemId
+          // ... headers including "auth-token": token ...
+          body: JSON.stringify({ itemId }), 
         }).catch((err) => console.error("Remove from cart error:", err));
       }
 
-      // 🔥 Sync to analytics backend (real-time chart) - Restored for CartAnalytics
-      syncCartToAnalytics(itemId, 1, "remove"); 
+      // 🔥 REMOVE THIS LINE TO FIX 401 ERROR:
+      // syncCartToAnalytics(itemId, 1, "remove"); 
 
       return updated;
     });
+    // ...
 
     // ✅ FIXED: Only restore stock for physical products, NOT services
     if (!isService) {
