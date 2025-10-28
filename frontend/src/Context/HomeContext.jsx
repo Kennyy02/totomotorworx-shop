@@ -2,10 +2,8 @@ import React, { createContext, useEffect, useState } from "react";
 
 export const HomeContext = createContext(null);
 
-// ✅ Dynamic API base URL for both local and Railway (Must be set in .env file as REACT_APP_BACKEND_URL)
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
-// ✅ Initialize default cart with up to 300 items
 const getDefaultCart = () => {
    const cart = {};
    for (let i = 1; i <= 300; i++) cart[i] = 0;
@@ -16,13 +14,9 @@ const HomeContextProvider = (props) => {
   const [all_product, setAll_Product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
-  // 🔥 REMOVED: syncCartToAnalytics helper function (which was causing the ESLint error)
-
  useEffect(() => {
-   // ✅ Fetch all products - Using API_URL
    fetch(`${API_URL}/products`)
       .then((response) => {
-        // Robust error handling for production deployment
         if (!response.ok) {
           console.error("HTTP Error fetching products:", response.status);
           throw new Error(`HTTP error! status: ${response.status}`); 
@@ -31,6 +25,7 @@ const HomeContextProvider = (props) => {
       })
       .then((data) => {
       if (Array.isArray(data)) { 
+            console.log("✅ Products loaded:", data.length);
             setAll_Product(data);
       } else {
           console.error("Backend returned non-array data for products:", data);
@@ -42,9 +37,9 @@ const HomeContextProvider = (props) => {
         setAll_Product([]);
       });
 
-    // ✅ Fetch user cart if logged in - Using API_URL
     const token = localStorage.getItem("auth-token");
     if (token) {
+      console.log("🔑 Auth token found, fetching cart...");
       fetch(`${API_URL}/getcart`, {
         method: "POST",
         headers: {
@@ -54,90 +49,145 @@ const HomeContextProvider = (props) => {
         },
       })
         .then((res) => res.json())
-        .then((data) => setCartItems(data))
+        .then((data) => {
+          console.log("✅ Cart data loaded:", data);
+          setCartItems(data);
+        })
         .catch((err) => console.error("Error fetching cart:", err));
+    } else {
+      console.log("❌ No auth token found");
     }
   }, []);
 
 
-  // ✅ FIXED: Add to cart + sync to backend (handles services properly)
+  // ✅ Add to cart with extensive debugging
   const addToCart = (itemId) => {
+    console.log("🛒 ADD TO CART CALLED - Item ID:", itemId);
+    
     const token = localStorage.getItem("auth-token");
+    console.log("🔑 Token exists:", !!token);
     
-    // Find the product to check if it's a service or physical product
-    const product = all_product.find((p) => p.id === itemId);
-    
-    // Check if product exists and has stock (skip stock check for services)
-    if (!product) {
-      console.error("Product not found:", itemId);
+    if (!token) {
+      alert("Please log in to add items to your cart!");
+      window.location.href = '/login';
       return;
     }
+
+    // Find the product
+    const product = all_product.find((p) => p.id === itemId);
+    console.log("📦 Product found:", product);
     
-    const isService = product.category === 'service';
-    const hasStock = product.stock > 0 || isService; // Services always have "stock"
-    
-    if (!hasStock) {
+    if (!product) {
+      console.error("❌ Product not found:", itemId);
+      alert("Product not found!");
+      return;
+    }
+
+    // Check if it's a service
+    const isService = product.category && product.category.toLowerCase() === 'service';
+    console.log("🔍 Is Service:", isService, "| Category:", product.category);
+
+    // Only check stock for physical products
+    if (!isService && product.stock <= 0) {
+      console.error("❌ Out of stock");
       alert("This item is out of stock!");
       return;
     }
 
-    setCartItems((prev) => {
-      const updated = { ...prev, [itemId]: prev[itemId] + 1 };
+    console.log("✅ Validation passed, adding to cart...");
 
-      // Correct, token-protected cart sync:
-      if (token) {
-        fetch(`${API_URL}/addtocart`, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "auth-token": token,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ itemId }),
-        }).catch((err) => console.error("Add to cart error:", err));
-      }
+    // Update cart state locally FIRST
+    setCartItems((prev) => {
+      const newQuantity = (prev[itemId] || 0) + 1;
+      const updated = { ...prev, [itemId]: newQuantity };
+      console.log("📊 Updated cart state:", { itemId, oldQty: prev[itemId] || 0, newQty: newQuantity });
+
+      // Then sync to backend
+      console.log("🌐 Sending request to:", `${API_URL}/addtocart`);
+      fetch(`${API_URL}/addtocart`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ itemId }),
+      })
+      .then(response => {
+        console.log("📡 Response status:", response.status);
+        return response.json();
+      })
+      .then(data => {
+        console.log("📡 Backend response:", data);
+        if (data.success) {
+          console.log("✅ Item successfully added to cart in backend");
+        } else {
+          console.error("❌ Backend error:", data);
+          alert("Failed to add item to cart: " + (data.error || "Unknown error"));
+        }
+      })
+      .catch((err) => {
+        console.error("❌ Network error:", err);
+        alert("Network error: " + err.message);
+      });
 
       return updated;
-     });
+    });
 
-    // ✅ FIXED: Only decrease stock for physical products, NOT services
+    // Only decrease stock for physical products
     if (!isService) {
+      console.log("📉 Decreasing stock for physical product");
       setAll_Product((prevProducts) =>
         prevProducts.map((p) =>
           p.id === itemId && p.stock > 0 ? { ...p, stock: p.stock - 1 } : p
         )
       );
+    } else {
+      console.log("ℹ️ Service detected - skipping stock decrease");
     }
   };
 
-  // ✅ FIXED: Remove from cart + sync to backend (handles services properly)
+  // ✅ Remove from cart with debugging
   const removeFromCart = (itemId) => {
+    console.log("🗑️ REMOVE FROM CART CALLED - Item ID:", itemId);
+    
     const token = localStorage.getItem("auth-token");
     
-    // Find the product to check if it's a service
+    if (!token) {
+      console.log("❌ No token, cannot remove from cart");
+      return;
+    }
+
     const product = all_product.find((p) => p.id === itemId);
-    const isService = product?.category === 'service';
+    const isService = product?.category && product.category.toLowerCase() === 'service';
 
     setCartItems((prev) => {
-      const updated = { ...prev, [itemId]: Math.max(prev[itemId] - 1, 0) };
+      const newQuantity = Math.max((prev[itemId] || 0) - 1, 0);
+      const updated = { ...prev, [itemId]: newQuantity };
+      console.log("📊 Updated cart (remove):", { itemId, oldQty: prev[itemId] || 0, newQty: newQuantity });
 
-      if (token) {
-        // Correct, token-protected cart sync:
-        fetch(`${API_URL}/removefromcart`, { 
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "auth-token": token,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ itemId }), 
-        }).catch((err) => console.error("Remove from cart error:", err));
-      }
+      fetch(`${API_URL}/removefromcart`, { 
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ itemId }), 
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("📡 Remove response:", data);
+        if (data.success) {
+          console.log("✅ Item removed from cart in backend");
+        }
+      })
+      .catch((err) => console.error("❌ Remove error:", err));
 
       return updated;
     });
 
-    // ✅ FIXED: Only restore stock for physical products, NOT services
+    // Only restore stock for physical products
     if (!isService) {
       setAll_Product((prevProducts) =>
         prevProducts.map((p) =>
@@ -160,8 +210,11 @@ const HomeContextProvider = (props) => {
   };
 
   // ✅ Count total number of items in cart
-  const getTotalCartItems = () =>
-  Object.values(cartItems).reduce((sum, qty) => sum + (qty > 0 ? qty : 0), 0);
+  const getTotalCartItems = () => {
+    const count = Object.values(cartItems).reduce((sum, qty) => sum + (qty > 0 ? qty : 0), 0);
+    console.log("🛒 Total cart items:", count);
+    return count;
+  };
 
   const contextValue = {
     getTotalCartItems,
@@ -170,13 +223,13 @@ const HomeContextProvider = (props) => {
     cartItems,
     addToCart,
     removeFromCart,
-   };
+  };
 
-   return (
-      <HomeContext.Provider value={contextValue}>
-       {props.children}
-      </HomeContext.Provider>
-   );
+  return (
+    <HomeContext.Provider value={contextValue}>
+      {props.children}
+    </HomeContext.Provider>
+  );
 };
 
 export default HomeContextProvider;
