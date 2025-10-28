@@ -1,132 +1,156 @@
-/* --- Main Container --- */
+/* ============================================
+   ADD PRODUCT COMPONENT - AddProduct.css
+   ============================================ */
+
 .add-product {
   box-sizing: border-box;
   width: 100%;
-  max-width: 800px;
-  padding: 40px 60px; /* Increased padding for more space */
-  margin: 40px auto; /* Centered with a larger top/bottom margin */
-  border-radius: 12px; /* Smoother rounded corners */
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* A soft, elegant shadow */
+  max-width: 900px;
+  padding: 48px 64px;
+  margin: 48px auto;
+  border-radius: var(--radius-lg);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
 }
 
-/* --- Form Fields --- */
+/* Decorative gradient overlay */
+.add-product::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--primary-gradient);
+}
+
+.add-product h1 {
+  margin: 0 0 32px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
 .addproduct-itemfield {
   width: 100%;
-  color: #34495e; /* A darker, more readable color */
-  font-size: 16px;
-  margin-bottom: 25px; /* Increased spacing between fields */
+  margin-bottom: 28px;
 }
 
 .addproduct-itemfield p {
-  margin-bottom: 10px; /* Better spacing for the label */
-  font-weight: 500;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
-.addproduct-itemfield input {
+.addproduct-itemfield input,
+.add-product-selector {
   box-sizing: border-box;
   width: 100%;
-  height: 50px;
-  border-radius: 8px; /* Rounded input fields */
-  padding-left: 15px;
-  border: 1px solid #e0e0e0; /* Softer border color */
+  height: 52px;
+  border-radius: var(--radius-sm);
+  padding: 0 18px;
+  border: 2px solid var(--border-color);
   outline: none;
-  color: #5c5c5c;
+  color: var(--text-primary);
   font-family: 'Poppins', sans-serif;
-  font-size: 16px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 15px;
+  background: #fafbfc;
+  transition: var(--transition);
 }
 
-.addproduct-itemfield input:focus {
-  border-color: #6079ff; /* Accent color on focus */
-  box-shadow: 0 0 5px rgba(96, 121, 255, 0.3);
+.addproduct-itemfield input:focus,
+.add-product-selector:focus {
+  border-color: var(--primary-color);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(96, 121, 255, 0.1);
 }
 
-/* --- Price Fields --- */
 .addproduct-price {
   display: flex;
-  gap: 30px; /* Reduced gap for a tighter feel */
+  gap: 24px;
 }
 
 .addproduct-price .addproduct-itemfield {
   flex: 1;
 }
 
-/* --- Category Selector --- */
 .add-product-selector {
-  box-sizing: border-box;
-  width: 100%;
-  height: 50px;
-  padding: 10px 15px;
-  font-size: 16px;
-  color: #5c5c5c;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  outline: none;
   cursor: pointer;
-  background-color: #ffffff;
-  transition: border-color 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236079ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+  padding-right: 44px;
 }
 
-.add-product-selector:hover,
-.add-product-selector:focus {
-  border-color: #6079ff;
-}
-
-/* --- Thumbnail Image --- */
 .addproduct-thumbnail-img {
-  height: 120px;
-  width: 120px;
-  border-radius: 10px;
-  object-fit: contain;
-  margin: 10px 0px;
-  border: 2px dashed #ccc; /* A dashed border for a clearer drop zone */
+  height: 160px;
+  width: 160px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  margin: 16px 0;
+  border: 3px dashed var(--border-color);
   cursor: pointer;
-  transition: border-color 0.3s ease, transform 0.3s ease;
+  transition: var(--transition);
+  background: #fafbfc;
+  padding: 8px;
 }
 
 .addproduct-thumbnail-img:hover {
-  border-color: #6079ff; /* Highlight border on hover */
-  transform: scale(1.05);
+  border-color: var(--primary-color);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-primary);
 }
 
-/* --- Submit Button --- */
 .addproduct-btn {
-  margin-top: 30px;
-  width: 180px; /* Slightly wider button */
-  height: 55px; /* Taller button for a better feel */
-  border-radius: 50px; /* Pill-shaped button */
-  background: #6079ff;
+  margin-top: 32px;
+  width: 200px;
+  height: 56px;
+  border-radius: 28px;
+  background: var(--primary-gradient);
   border: none;
   cursor: pointer;
   color: white;
-  font-size: 18px;
-  font-weight: 600;
-  box-shadow: 0 5px 15px rgba(96, 121, 255, 0.4);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-primary);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.addproduct-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.addproduct-btn:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .addproduct-btn:hover {
-  background-color: #4a63e0;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(96, 121, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(96, 121, 255, 0.4);
 }
 
-/* --- Responsive Styles --- */
-@media(max-width:800px) {
-  .add-product {
-    width: auto;
-    padding: 30px;
-    margin: 20px;
-  }
-  
-  .addproduct-price {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .addproduct-btn {
-    width: 100%;
-    margin-top: 25px;
-  }
+.addproduct-btn:active {
+  transform: translateY(0);
 }

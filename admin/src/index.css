@@ -1,5 +1,89 @@
-body{
+/* ============================================
+   MODERN ADMIN PANEL - UNIFIED DESIGN SYSTEM
+   (Global Styles, Variables, and Resets)
+   ============================================ */
+
+/* --- CSS VARIABLES FOR CONSISTENCY --- */
+:root {
+    --primary-gradient: linear-gradient(135deg, #6079ff 0%, #7c5dff 100%);
+    --primary-color: #6079ff;
+    --primary-hover: #4a63e0;
+    --dark-bg: #1a1d29;
+    --card-bg: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #6c757d;
+    --text-light: #a8adb8;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --shadow-primary: 0 8px 24px rgba(96, 121, 255, 0.25);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global body styles (from your original index.css) */
+body {
     margin: 0;
     background-color: #f6f6f6;
     height: 100vh;
+}
+
+/* ============================================
+   LOADING & ERROR STATES (Global Utilities)
+   ============================================ */
+.error-message {
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%);
+    border-left: 4px solid #ff4d4f;
+    border-radius: var(--radius-sm);
+    color: #cf1322;
+    font-weight: 600;
+    margin-bottom: 24px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply animation to all main component containers */
+.list-product,
+.add-product,
+.inventory-container,
+.user-management-container {
+    animation: fadeIn 0.4s ease;
+}
+
+/* ============================================
+   SHARED RESPONSIVE DESIGN (Container Overrides)
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .list-product,
+    .inventory-container,
+    .user-management-container {
+    max-width: 95%;
+    }
+}
+
+@media (max-width: 800px) {
+    /* Shared padding/margin reset for mobile */
+    .list-product,
+    .inventory-container,
+    .user-management-container {
+        padding: 24px 16px;
+        margin: 24px 16px;
+    }
 }
