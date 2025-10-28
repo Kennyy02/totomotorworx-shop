@@ -1,8 +1,9 @@
-/* --- Existing styles remain unchanged --- */
+/* --- Banner and Sort Section --- */
 .homecategory-sort img {
   width: 15px;
   height: 15px;
 }
+
 .homecategory-banner {
   display: block;
   margin: 30px auto;
@@ -11,26 +12,62 @@
   object-fit: cover;
   border-radius: 10px;
 }
+
 .homecategory-indexSort {
   display: flex;
   margin: 0px 170px;
   justify-content: space-between;
   align-items: center;
 }
+
 .homecategory-sort {
   padding: 10px 20px;
   border-radius: 40px;
   border: 1px solid #888;
 }
+
 .homecategory-indexSort p span {
   font-weight: 600;
 }
+
+/* --- Products Grid (Default 4 columns) --- */
 .homecategory-products {
   margin: 20px 170px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
   row-gap: 80px;
 }
+
+/* --- Services Header (Full width banner style) --- */
+.services-header {
+  grid-column: 1 / -1; /* Spans full width */
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
+
+.services-header h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.services-header p {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.95);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* --- Load More Button --- */
 .homecategory-loadmore {
   display: flex;
   justify-content: center;
@@ -43,154 +80,145 @@
   color: #787878;
   font-size: 18px;
   font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* --- Old services styles (keep for backward compatibility) --- */
-.services {
-  margin: 40px 170px;
-  text-align: center;
-}
-.services h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
-  color: #333;
-}
-.services p {
-  color: #555;
-  margin-bottom: 30px;
-  font-size: 16px;
+.homecategory-loadmore:hover {
+  background: #ddd;
+  transform: translateY(-2px);
 }
 
-/* Services Grid */
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 25px;
-}
+/* --- Responsive Breakpoints --- */
 
-/* Service Card */
-.service-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-align: center;
-}
-.service-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* Service Image */
-.service-image img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-bottom: 1px solid #eee;
-}
-
-/* Service Content */
-.service-content {
-  padding: 15px;
-}
-.service-icon {
-  margin-bottom: 10px;
-  color: #e63946;
-}
-.service-content h3 {
-  font-size: 18px;
-  color: #222;
-  margin: 8px 0;
-}
-.service-content p {
-  font-size: 14px;
-  color: #666;
-}
-
-/* --- NEW: Services header - spans full width --- */
-.services-header {
-  width: 100%;
-  text-align: center;
-  margin-bottom: 40px;
-  padding: 20px;
-  grid-column: 1 / -1; /* Makes it span full width in grid layout */
-}
-
-.services-header h1 {
-  font-size: 48px;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 15px;
-  letter-spacing: -0.5px;
-}
-
-.services-header p {
-  font-size: 18px;
-  color: #7f8c8d;
-  max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-/* --- Responsive --- */
-@media(max-width:1280px){
-  .homecategory-banner{
+/* Large tablets and small desktops (1280px and below) */
+@media (max-width: 1280px) {
+  .homecategory-banner {
     margin: 20px auto;
     width: 90%;
   }
-  .homecategory-indexSort{
+  
+  .homecategory-indexSort {
     width: 90%;
     margin: auto;
   }
-  .homecategory-products{
+  
+  .homecategory-products {
     width: 90%;
-    margin: 10px auto;
-    row-gap: 40px;
+    margin: 20px auto;
+    gap: 25px;
+    row-gap: 60px;
   }
-  .services {
-    margin: 30px auto;
-    width: 90%;
+  
+  .services-header {
+    padding: 35px 20px;
   }
-  .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media(max-width:800px){
-  .homecategory-products{
-    grid-template-columns: 1fr 1fr 1fr;
-    width: 95%;
-  }
-  .services-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 768px) {
+  
   .services-header h1 {
-    font-size: 32px;
+    font-size: 36px;
   }
   
   .services-header p {
     font-size: 16px;
-    padding: 0 10px;
   }
 }
 
-@media(max-width:500px){
-  .homecategory-products{
-    grid-template-columns: 1fr 1fr;
-    gap: 85px;
+/* Tablets (800px and below) - 3 columns for products */
+@media (max-width: 800px) {
+  .homecategory-products {
+    grid-template-columns: repeat(3, 1fr);
+    width: 95%;
+    gap: 20px;
+    row-gap: 50px;
   }
-  .services-grid {
-    grid-template-columns: 1fr;
+  
+  .homecategory-banner {
+    height: 150px;
   }
+  
+  .services-header {
+    padding: 30px 15px;
+    border-radius: 12px;
+  }
+  
   .services-header h1 {
-    font-size: 24px;
+    font-size: 28px;
+  }
+  
+  .services-header p {
+    font-size: 15px;
+  }
+}
+
+/* Mobile landscape and small tablets (768px and below) */
+@media (max-width: 768px) {
+  .homecategory-indexSort {
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px auto;
+  }
+  
+  .services-header h1 {
+    font-size: 26px;
   }
   
   .services-header p {
     font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+/* Mobile portrait (500px and below) - 2 columns */
+@media (max-width: 500px) {
+  .homecategory-products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    row-gap: 40px;
+    margin: 15px auto;
+  }
+  
+  .homecategory-banner {
+    height: 120px;
+    border-radius: 8px;
+  }
+  
+  .services-header {
+    padding: 25px 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .services-header h1 {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  
+  .services-header p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .homecategory-loadmore {
+    margin: 80px auto;
+    width: 180px;
+    height: 50px;
+    font-size: 16px;
+  }
+}
+
+/* Very small mobile (400px and below) */
+@media (max-width: 400px) {
+  .homecategory-products {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    row-gap: 35px;
+  }
+  
+  .services-header h1 {
+    font-size: 20px;
+  }
+  
+  .services-header p {
+    font-size: 12px;
   }
 }
