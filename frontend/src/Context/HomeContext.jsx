@@ -16,19 +16,7 @@ const HomeContextProvider = (props) => {
   const [all_product, setAll_Product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
-  // ✅ Helper to send real-time analytics data to backend
- const syncCartToAnalytics = async (productId, userId, action) => {
-    try {
-      // Using API_URL for deployed backend connection
-      await fetch(`${API_URL}/${action === "add" ? "addtocart" : "removefromcart"}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product_id: productId, user_id: userId }),
-      });
-    } catch (error) {
-      console.error("Error syncing with analytics backend:", error);
-     }
-  };
+  // 🔥 REMOVED: syncCartToAnalytics helper function (which was causing the ESLint error)
 
  useEffect(() => {
    // ✅ Fetch all products - Using API_URL
@@ -93,24 +81,24 @@ const HomeContextProvider = (props) => {
       return;
     }
 
-    // ... (in addToCart function)
     setCartItems((prev) => {
       const updated = { ...prev, [itemId]: prev[itemId] + 1 };
 
       // Correct, token-protected cart sync:
       if (token) {
         fetch(`${API_URL}/addtocart`, {
-          // ... headers including "auth-token": token ...
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "auth-token": token,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ itemId }),
         }).catch((err) => console.error("Add to cart error:", err));
       }
 
-      // 🔥 REMOVE THIS LINE TO FIX 401 ERROR:
-      // syncCartToAnalytics(itemId, 1, "add"); 
-
       return updated;
      });
-// ...
 
     // ✅ FIXED: Only decrease stock for physical products, NOT services
     if (!isService) {
@@ -130,24 +118,24 @@ const HomeContextProvider = (props) => {
     const product = all_product.find((p) => p.id === itemId);
     const isService = product?.category === 'service';
 
-    // ... (in removeFromCart function)
     setCartItems((prev) => {
       const updated = { ...prev, [itemId]: Math.max(prev[itemId] - 1, 0) };
 
       if (token) {
         // Correct, token-protected cart sync:
         fetch(`${API_URL}/removefromcart`, { 
-          // ... headers including "auth-token": token ...
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "auth-token": token,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ itemId }), 
         }).catch((err) => console.error("Remove from cart error:", err));
       }
 
-      // 🔥 REMOVE THIS LINE TO FIX 401 ERROR:
-      // syncCartToAnalytics(itemId, 1, "remove"); 
-
       return updated;
     });
-    // ...
 
     // ✅ FIXED: Only restore stock for physical products, NOT services
     if (!isService) {
