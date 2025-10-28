@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from 'react';
 import './Navbar.css';
 import bike from '../Assets/bike.png';
 import cart_icon from '../Assets/cart_icon.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { HomeContext } from '../../Context/HomeContext';
 import nav_dropdown from '../Assets/nav_dropdown.png';
 
@@ -10,8 +10,6 @@ const Navbar = () => {
   const [menu, setMenu] = useState("home");
   const { getTotalCartItems } = useContext(HomeContext);
   const menuRef = useRef();
-  const navigate = useNavigate();
-
   // ✅ Dynamic product categories
   const productCategories = [
     { name: "Tires", path: "/products/tires" },
@@ -25,12 +23,6 @@ const Navbar = () => {
   const dropdown_toggle = (e) => {
     menuRef.current.classList.toggle('nav-menu-visible');
     e.target.classList.toggle('open');
-  }
-
-  // ✅ Handle Products menu click - navigate to /products
-  const handleProductsClick = () => {
-    setMenu("products");
-    navigate('/products');
   }
 
   return (
@@ -47,16 +39,11 @@ const Navbar = () => {
         </li>
 
         {/* ✅ Fixed Products Dropdown */}
-        <li className="dropdown-container">
-          <span 
-            style={{ cursor: 'pointer' }} 
-            onClick={handleProductsClick}
-          >
-            Products
-          </span>
+        <li className="dropdown-container" onClick={() => { setMenu("products") }}>
+          <Link style={{ textDecoration: 'none' }} to='/products'>Products</Link>
           {menu === "products" ? <hr /> : <></>}
           
-          <div className="dropdown-content">
+          <div className="dropdown-content" onClick={(e) => e.stopPropagation()}>
             {productCategories.map((category, index) => (
               <Link 
                 key={index} 
