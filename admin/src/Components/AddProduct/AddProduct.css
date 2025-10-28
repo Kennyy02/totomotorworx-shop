@@ -154,3 +154,24 @@
 .addproduct-btn:active {
   transform: translateY(0);
 }
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 800px) {
+  .add-product {
+    padding: 32px 24px;
+    margin: 24px 16px;
+  }
+
+  .addproduct-price {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .addproduct-btn {
+    width: 100%;
+    margin-top: 24px;
+  }
+}
