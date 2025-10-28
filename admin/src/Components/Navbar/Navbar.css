@@ -10,14 +10,26 @@
     /* Subtle rounded corners at the bottom */
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    margin-bottom: 20px; /* Increased margin for better separation from content */
+    /* Reduced margin-bottom to fix the gap */
+    margin-bottom: 10px; 
 }
 
-/* --- Navigation Logo --- */
-.nav-logo {
-    width: 150px; /* Slightly larger logo for a stronger brand presence */
-    height: auto; /* Maintain aspect ratio */
+/* --- Navigation Title (New) --- */
+.nav-title {
+    font-size: 28px; /* Larger, clearer text */
+    font-weight: 700;
+    color: #333333; /* Dark color for a professional look */
+    /* Remove default margin from the heading tag */
+    margin: 0;
 }
+
+/* --- Navigation Logo (Old - kept for reference, but should be removed) --- */
+/*
+.nav-logo {
+    width: 150px; 
+    height: auto; 
+}
+*/
 
 /* --- Navigation Profile Picture --- */
 .nav-profile {
