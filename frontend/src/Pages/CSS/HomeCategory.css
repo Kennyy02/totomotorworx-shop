@@ -39,6 +39,16 @@
   row-gap: 80px;
 }
 
+/* --- Fix Image Sizes (Make all images same height) --- */
+.homecategory-products .item img,
+.homecategory-products .product-image img,
+.homecategory-products img[alt] {
+  width: 100%;
+  height: 280px; /* Fixed height for all images */
+  object-fit: cover; /* Crop images to fit without distortion */
+  border-radius: 8px;
+}
+
 /* --- Services Header (Full width banner style) --- */
 .services-header {
   grid-column: 1 / -1; /* Spans full width */
@@ -132,6 +142,13 @@
     row-gap: 50px;
   }
   
+  /* Adjust image height for tablets */
+  .homecategory-products .item img,
+  .homecategory-products .product-image img,
+  .homecategory-products img[alt] {
+    height: 240px;
+  }
+  
   .homecategory-banner {
     height: 150px;
   }
@@ -175,6 +192,13 @@
     gap: 15px;
     row-gap: 40px;
     margin: 15px auto;
+  }
+  
+  /* Adjust image height for mobile */
+  .homecategory-products .item img,
+  .homecategory-products .product-image img,
+  .homecategory-products img[alt] {
+    height: 180px;
   }
   
   .homecategory-banner {
