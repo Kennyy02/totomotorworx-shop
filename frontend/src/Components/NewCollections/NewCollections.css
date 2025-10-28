@@ -1,5 +1,5 @@
 /* ==============================================
-   New Collections 3D Rotation Slider - Compact Images
+   New Collections 3D Rotation Slider - Compact Items
    ============================================== */
 .new-collections {
   display: flex;
@@ -36,43 +36,104 @@
   position: relative;
   width: 100%;
   max-width: 1000px;
-  height: 300px; /* reduced height for smaller items */
+  height: 400px; /* increased height for better visibility */
   transform-style: preserve-3d;
-  animation: rotateCarousel 20s linear infinite;
+  animation: rotateCarousel 25s linear infinite;
 }
 
-/* --- Carousel Items - Smaller Images --- */
+/* Pause on hover */
+.carousel:hover {
+  animation-play-state: paused;
+}
+
+/* --- Carousel Items --- */
 .carousel-item {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 150px;  /* smaller width */
-  height: 200px; /* smaller height */
+  width: 220px;  /* optimal card width */
+  height: 320px; /* optimal card height */
   transform-style: preserve-3d;
   transform-origin: center center;
+  text-decoration: none;
+  display: block;
   
-  /* Smaller circle radius for compact items */
+  /* 3D circular positioning */
   transform: rotateY(calc((360deg / var(--total)) * var(--i)))
-             translateZ(350px) /* smaller radius */
+             translateZ(450px) /* radius of circle */
              translate(-50%, -50%);
              
   transition: transform 0.8s ease, opacity 0.3s ease;
   opacity: 0.95;
 }
 
+/* Image styling */
 .carousel-item img {
   width: 100%;
   height: 100%;
-  border-radius: 12px; /* slightly smaller corners */
+  border-radius: 15px;
   object-fit: cover;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
   transition: transform 0.5s ease, box-shadow 0.5s ease;
+  display: block;
 }
 
+/* Overlay with product info */
+.carousel-item-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  padding: 15px;
+  border-radius: 0 0 15px 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.carousel-item:hover .carousel-item-overlay {
+  transform: translateY(0);
+}
+
+.carousel-item-overlay h3 {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.carousel-item-prices {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.carousel-item-prices .new-price {
+  color: #2ecc71;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.carousel-item-prices .old-price {
+  color: #bdc3c7;
+  font-size: 14px;
+  text-decoration: line-through;
+}
+
+/* Hover effects */
 .carousel-item:hover img {
-  transform: scale(1.1) rotateY(10deg);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+.carousel-item:hover {
   z-index: 10;
+  opacity: 1;
 }
 
 /* --- Carousel Rotation Animation --- */
@@ -86,17 +147,56 @@
    ============================================== */
 @media(max-width:1024px){
   .new-collections h1 { font-size: 38px; }
-  .carousel { height: 250px; }
-  .carousel-item { width: 120px; height: 160px; }
+  .carousel { 
+    height: 350px; 
+  }
+  .carousel-item { 
+    width: 180px; 
+    height: 260px; 
+  }
+  .carousel-item {
+    transform: rotateY(calc((360deg / var(--total)) * var(--i)))
+               translateZ(380px)
+               translate(-50%, -50%);
+  }
 }
 
 @media(max-width:768px){
   .new-collections h1 { font-size: 28px; }
-  .carousel { height: 200px; }
-  .carousel-item { width: 100px; height: 140px; }
+  .new-collections { padding: 40px 15px 200px; }
+  .carousel { 
+    height: 300px; 
+  }
+  .carousel-item { 
+    width: 150px; 
+    height: 220px; 
+  }
+  .carousel-item {
+    transform: rotateY(calc((360deg / var(--total)) * var(--i)))
+               translateZ(300px)
+               translate(-50%, -50%);
+  }
+  .carousel-item-overlay h3 { font-size: 14px; }
+  .carousel-item-prices .new-price { font-size: 16px; }
+  .carousel-item-prices .old-price { font-size: 12px; }
 }
 
 @media(max-width:500px){
-  .carousel { height: 180px; }
-  .carousel-item { width: 80px; height: 120px; }
+  .new-collections h1 { font-size: 24px; }
+  .carousel { 
+    height: 250px; 
+  }
+  .carousel-item { 
+    width: 120px; 
+    height: 180px; 
+  }
+  .carousel-item {
+    transform: rotateY(calc((360deg / var(--total)) * var(--i)))
+               translateZ(240px)
+               translate(-50%, -50%);
+  }
+  .carousel-item-overlay { padding: 10px; }
+  .carousel-item-overlay h3 { font-size: 12px; }
+  .carousel-item-prices .new-price { font-size: 14px; }
+  .carousel-item-prices .old-price { font-size: 11px; }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './NewCollections.css';
-import Item from '../Item/Item';
+import { Link } from 'react-router-dom';
 
 const NewCollections = () => {
   const [newCollection, setNewCollection] = useState([]);
@@ -18,19 +18,22 @@ const NewCollections = () => {
       <hr />
       <div className="carousel">
         {newCollection.map((item, i) => (
-          <div
+          <Link
+            to={`/product/${item.id}`}
             className="carousel-item"
             key={item.id}
             style={{ '--i': i, '--total': newCollection.length }}
+            onClick={() => window.scrollTo(0, 0)}
           >
-            <Item
-              id={item.id}
-              name={item.name}
-              image={item.image}
-              new_price={item.new_price}
-              old_price={item.old_price}
-            />
-          </div>
+            <img src={item.image} alt={item.name} />
+            <div className="carousel-item-overlay">
+              <h3>{item.name}</h3>
+              <div className="carousel-item-prices">
+                <span className="new-price">₱{item.new_price}</span>
+                <span className="old-price">₱{item.old_price}</span>
+              </div>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
