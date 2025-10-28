@@ -72,9 +72,26 @@ const HomeContextProvider = (props) => {
   }, []);
 
 
-  // ✅ Add to cart + sync to backend
+  // ✅ FIXED: Add to cart + sync to backend (handles services properly)
   const addToCart = (itemId) => {
     const token = localStorage.getItem("auth-token");
+    
+    // Find the product to check if it's a service or physical product
+    const product = all_product.find((p) => p.id === itemId);
+    
+    // Check if product exists and has stock (skip stock check for services)
+    if (!product) {
+      console.error("Product not found:", itemId);
+      return;
+    }
+    
+    const isService = product.category === 'service';
+    const hasStock = product.stock > 0 || isService; // Services always have "stock"
+    
+    if (!hasStock) {
+      alert("This item is out of stock!");
+      return;
+    }
 
     setCartItems((prev) => {
       const updated = { ...prev, [itemId]: prev[itemId] + 1 };
@@ -98,17 +115,23 @@ const HomeContextProvider = (props) => {
       return updated;
      });
 
-    // ✅ Decrease stock locally
-    setAll_Product((prevProducts) =>
-      prevProducts.map((p) =>
-        p.id === itemId && p.stock > 0 ? { ...p, stock: p.stock - 1 } : p
-      )
-    );
+    // ✅ FIXED: Only decrease stock for physical products, NOT services
+    if (!isService) {
+      setAll_Product((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === itemId && p.stock > 0 ? { ...p, stock: p.stock - 1 } : p
+        )
+      );
+    }
   };
 
-  // ✅ Remove from cart + sync to backend
+  // ✅ FIXED: Remove from cart + sync to backend (handles services properly)
   const removeFromCart = (itemId) => {
     const token = localStorage.getItem("auth-token");
+    
+    // Find the product to check if it's a service
+    const product = all_product.find((p) => p.id === itemId);
+    const isService = product?.category === 'service';
 
     setCartItems((prev) => {
       const updated = { ...prev, [itemId]: Math.max(prev[itemId] - 1, 0) };
@@ -120,7 +143,9 @@ const HomeContextProvider = (props) => {
           headers: {
             Accept: "application/json",
             "auth-token": token,
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify({ itemId }), // Fixed: now sends itemId
         }).catch((err) => console.error("Remove from cart error:", err));
       }
 
@@ -130,12 +155,14 @@ const HomeContextProvider = (props) => {
       return updated;
     });
 
-    // ✅ Restore stock locally
-    setAll_Product((prevProducts) =>
-      prevProducts.map((p) =>
-        p.id === itemId ? { ...p, stock: p.stock + 1 } : p
-      )
-    );
+    // ✅ FIXED: Only restore stock for physical products, NOT services
+    if (!isService) {
+      setAll_Product((prevProducts) =>
+        prevProducts.map((p) =>
+          p.id === itemId ? { ...p, stock: p.stock + 1 } : p
+        )
+      );
+    }
   };
 
   // ✅ Calculate total amount
