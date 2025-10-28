@@ -122,30 +122,99 @@ app.post("/upload", upload.single('product'), (req, res) => {
   });
 });
 
-// Add product
+// ✅ FIXED Add product endpoint
 app.post("/addproduct", (req, res) => {
-  const { name, image, category, new_price, old_price } = req.body;
-  const date = new Date();
-  const available = true;
+  console.log("📦 Received addproduct request:", req.body);
+  
+  const { name, image, category, new_price, old_price, stock } = req.body;
 
-  // Since you are manually managing IDs, keep this logic
+  // 1. INPUT VALIDATION
+  if (!name || !image || !category || !new_price || !old_price) {
+    console.error("❌ Validation failed: Missing required fields");
+    return res.status(400).json({ 
+      success: false, 
+      error: "All fields are required (name, image, category, new_price, old_price)" 
+    });
+  }
+
+  // Validate price values (they should be numbers)
+  const newPrice = parseFloat(new_price);
+  const oldPrice = parseFloat(old_price);
+  
+  if (isNaN(newPrice) || isNaN(oldPrice)) {
+    console.error("❌ Validation failed: Invalid price values");
+    return res.status(400).json({ 
+      success: false, 
+      error: "Prices must be valid numbers" 
+    });
+  }
+
+  // Validate stock (default to 0 if not provided)
+  const stockValue = stock !== undefined ? parseInt(stock) : 0;
+  if (isNaN(stockValue) || stockValue < 0) {
+    console.error("❌ Validation failed: Invalid stock value");
+    return res.status(400).json({ 
+      success: false, 
+      error: "Stock must be a positive number" 
+    });
+  }
+
+  const date = new Date();
+  const available = 1; // tinyint(1) - use 1 for true, 0 for false
+
+  // Get the last ID
   const getLastIdQuery = "SELECT id FROM product ORDER BY id DESC LIMIT 1";
+  
   db.query(getLastIdQuery, (err, results) => {
-    if (err) return res.status(500).json({ error: "Failed to fetch latest product ID" });
+    if (err) {
+      console.error("❌ Error fetching last product ID:", err);
+      return res.status(500).json({ 
+        success: false, 
+        error: "Database error while fetching last ID: " + err.message 
+      });
+    }
 
     let newId = results.length > 0 ? results[0].id + 1 : 1;
+    console.log("🆔 New product ID will be:", newId);
 
+    // Insert query matching your exact schema:
+    // id, name, image, category, new_price, old_price, date, available, stock
     const insertQuery = `
-      INSERT INTO product (id, name, image, category, new_price, old_price, date, available)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO product (id, name, image, category, new_price, old_price, date, available, stock)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    db.query(insertQuery, [
-      newId, name, image, category, new_price, old_price, date, available
-    ], (err, result) => {
-      if (err) return res.status(500).json({ error: "Failed to insert product" });
-      // result.insertId is generally 0 for mysql2 pool when explicitly inserting id
-      res.json({ success: true, message: "Product added", insertId: newId });
+    const values = [newId, name, image, category, newPrice, oldPrice, date, available, stockValue];
+    console.log("💾 Inserting product with values:", values);
+
+    db.query(insertQuery, values, (err, result) => {
+      if (err) {
+        console.error("❌ Error inserting product:", err);
+        return res.status(500).json({ 
+          success: false, 
+          error: "Failed to insert product into database: " + err.message 
+        });
+      }
+      
+      console.log("✅ Product added successfully! ID:", newId);
+      
+      // SUCCESS - Return the format your frontend expects
+      res.json({ 
+        success: true, 
+        message: "Product added successfully", 
+        id: newId,
+        product: { 
+          id: newId, 
+          name, 
+          image, 
+          category, 
+          new_price: newPrice, 
+          old_price: oldPrice, 
+          date, 
+          available,
+          stock: stockValue
+        }
+      });
     });
   });
 });
