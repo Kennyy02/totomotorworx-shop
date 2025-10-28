@@ -8,7 +8,7 @@ const AddProduct = () => {
     const [productDetails, setProductDetails] = useState({
         name: "",
         image: "",
-        category: "tires", // Default category
+        category: "tires",
         new_price: "",
         old_price: "",
     });
@@ -25,7 +25,7 @@ const AddProduct = () => {
         // --- 1. Client-Side Validation ---
         if (!productDetails.name || !image || !productDetails.category || !productDetails.new_price || !productDetails.old_price) {
             alert("Please fill out all the fields and upload an image.");
-            return; // Stop the function if validation fails
+            return;
         }
         
         let responseData;
@@ -47,7 +47,7 @@ const AddProduct = () => {
 
             if (!responseData.success) {
                 alert("Image upload failed. Please try again.");
-                return; // Stop if image upload fails
+                return;
             }
 
             product.image = responseData.image_url;
@@ -66,7 +66,6 @@ const AddProduct = () => {
             // --- 4. Improved Error Handling and Feedback ---
             if (addProductData.success) {
                 alert("Product Added Successfully!");
-                // Clear the form after a successful submission
                 setProductDetails({
                     name: "",
                     image: "",
@@ -76,7 +75,6 @@ const AddProduct = () => {
                 });
                 setImage(false);
             } else {
-                // Display the specific error message from the backend
                 alert(`Failed to add product: ${addProductData.error || 'Unknown error'}`);
             }
 
@@ -88,23 +86,51 @@ const AddProduct = () => {
 
     return (
         <div className='add-product'>
+            {/* Product Name */}
             <div className="addproduct-itemfield">
                 <p>Product/Service title</p>
-                <input value={productDetails.name} onChange={changeHandler} type="text" name='name' placeholder='Type here' />
+                <input 
+                    value={productDetails.name} 
+                    onChange={changeHandler} 
+                    type="text" 
+                    name='name' 
+                    placeholder='Type here' 
+                />
             </div>
+
+            {/* Price Fields */}
             <div className="addproduct-price">
                 <div className="addproduct-itemfield">
                     <p>Price</p>
-                    <input value={productDetails.old_price} onChange={changeHandler} type="text" name='old_price' placeholder='Type here' />
+                    <input 
+                        value={productDetails.old_price} 
+                        onChange={changeHandler} 
+                        type="text" 
+                        name='old_price' 
+                        placeholder='Type here' 
+                    />
                 </div>
                 <div className="addproduct-itemfield">
-                    <p> Offer Price</p>
-                    <input value={productDetails.new_price} onChange={changeHandler} type="text" name='new_price' placeholder='Type here' />
+                    <p>Offer Price</p>
+                    <input 
+                        value={productDetails.new_price} 
+                        onChange={changeHandler} 
+                        type="text" 
+                        name='new_price' 
+                        placeholder='Type here' 
+                    />
                 </div>
             </div>
+
+            {/* Category */}
             <div className="addproduct-itemfield">
                 <p>Category</p>
-                <select value={productDetails.category} onChange={changeHandler} name="category" className='add-product-selector'>
+                <select 
+                    value={productDetails.category} 
+                    onChange={changeHandler} 
+                    name="category" 
+                    className='add-product-selector'
+                >
                     <option value="tires">Tires</option>
                     <option value="grip">Grips</option>
                     <option value="motor-oil">Motor Oil</option>
@@ -114,13 +140,45 @@ const AddProduct = () => {
                     <option value="service">Service</option>
                 </select>
             </div>
-            <div className="addproduct-itemfield">
-                <label htmlFor="file-input">
-                    <img src={image ? URL.createObjectURL(image) : upload_area} className='addproduct-thumbnail-img' alt="Upload Area" />
-                </label>
-                <input onChange={imageHandler} type="file" name='image' id='file-input' hidden />
+
+            {/* Upload Area */}
+            <div className="addproduct-upload-section">
+                <label className="addproduct-upload-label">Upload Area</label>
+                <div className="addproduct-thumbnail-container">
+                    <label htmlFor="file-input" style={{width: '100%', cursor: 'pointer'}}>
+                        {image ? (
+                            <div className="image-preview-container">
+                                <img 
+                                    src={URL.createObjectURL(image)} 
+                                    className='addproduct-thumbnail-img' 
+                                    alt="Product Preview" 
+                                />
+                                <span className="image-name">{image.name}</span>
+                            </div>
+                        ) : (
+                            <div className="upload-content">
+                                <svg className="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span className="upload-text">Upload Area</span>
+                            </div>
+                        )}
+                    </label>
+                    <input 
+                        onChange={imageHandler} 
+                        type="file" 
+                        name='image' 
+                        id='file-input' 
+                        hidden 
+                        accept="image/*" 
+                    />
+                </div>
             </div>
-            <button onClick={() => { Add_Product() }} className='addproduct-btn'>ADD</button>
+
+            {/* Submit Button */}
+            <button onClick={Add_Product} className='addproduct-btn'>
+                ADD
+            </button>
         </div>
     );
 };
