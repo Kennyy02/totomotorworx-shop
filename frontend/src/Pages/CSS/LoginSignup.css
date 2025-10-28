@@ -43,21 +43,6 @@
   gap: 14px;
 }
 
-/* Username field animation */
-.username-field-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 0;
-  overflow: hidden;
-  transition: height 0.45s ease, opacity 0.45s ease;
-  opacity: 0;
-}
-.signup-active .username-field-container {
-  height: 55px;
-  opacity: 1;
-}
-.username-field-container input,
 .loginsignup-fields input {
   height: 44px;
   width: 100%;
@@ -70,7 +55,6 @@
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
   box-sizing: border-box;
 }
-.username-field-container input:focus,
 .loginsignup-fields input:focus {
   border-color: #5b6ed9;
   box-shadow: 0 0 0 3px rgba(91, 110, 217, 0.2);
@@ -91,6 +75,15 @@
   transition: color 0.25s ease, transform 0.2s ease;
 }
 .toggle-password-icon:hover { color: #5b6ed9; transform: scale(1.1); }
+
+/* Password match feedback */
+.password-match {
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: -8px;
+}
+.password-match.match { color: #27ae60; }
+.password-match.mismatch { color: #e74c3c; }
 
 /* Password requirements */
 .password-requirements {
@@ -261,16 +254,14 @@
 @media (max-width: 800px) {
   .loginsignup-container { padding: 30px 22px; }
   .loginsignup-container h1 { font-size: 26px; }
-  .loginsignup-fields input,
-  .username-field-container input { height: 40px; font-size: 13.5px; }
+  .loginsignup-fields input { height: 40px; font-size: 13.5px; }
   .loginsignup-container button { height: 44px; font-size: 14.5px; }
 }
 @media (max-width: 500px) {
   .loginsignup { padding: 30px 10px; }
   .loginsignup-container { padding: 22px 18px; border-radius: 12px; }
   .loginsignup-container h1 { font-size: 22px; }
-  .loginsignup-fields input,
-  .username-field-container input { height: 38px; font-size: 13px; }
+  .loginsignup-fields input { height: 38px; font-size: 13px; }
   .loginsignup-container button { height: 42px; font-size: 14px; }
   .loginsignup-login { font-size: 12px; }
   .modal-content { padding: 20px; border-radius: 12px; }
