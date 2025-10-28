@@ -6,8 +6,11 @@ const ProductDisplay = (props) => {
     const { product } = props;
     const { addToCart } = useContext(HomeContext);
 
-    // Determine if the product is in stock
-    const isInStock = product.stock > 0;
+    // ✅ Check if this is a service
+    const isService = product.category && product.category.toLowerCase() === 'service';
+    
+    // ✅ Services are always "in stock", physical products check actual stock
+    const isInStock = isService || product.stock > 0;
 
     return (
         <div className='productdisplay'>
@@ -38,16 +41,23 @@ const ProductDisplay = (props) => {
                     </div>
                 </div>
 
-                {/* Stock Section */}
+                {/* Stock Section - Only show for physical products */}
                 <div className="productdisplay-right-stock">
-                    <p>
-                        <b>Stock Available: </b>
-                        {isInStock ? (
-                            <span className="in-stock">{product.stock} in stock</span>
-                        ) : (
-                            <span className="out-of-stock">Out of Stock</span>
-                        )}
-                    </p>
+                    {isService ? (
+                        <p>
+                            <b>Service Available: </b>
+                            <span className="in-stock">✓ Available</span>
+                        </p>
+                    ) : (
+                        <p>
+                            <b>Stock Available: </b>
+                            {product.stock > 0 ? (
+                                <span className="in-stock">{product.stock} in stock</span>
+                            ) : (
+                                <span className="out-of-stock">Out of Stock</span>
+                            )}
+                        </p>
+                    )}
                 </div>
 
                 {/* Welcoming Description */}
@@ -57,21 +67,24 @@ const ProductDisplay = (props) => {
                             <strong>
                                 👋 Welcome to <span className="brand-name">TotoMotorWorx</span> Online Canvassing!
                             </strong> ✨ <br />
-                            We’re excited to have you here. Take your time browsing our wide range of high-quality automotive products.  
+                            We're excited to have you here. Take your time browsing our wide range of high-quality automotive {isService ? 'services' : 'products'}.  
                             Compare prices, explore features, and find the best deals that fit your needs.  
                             <br /><br />
-                            At <span className="brand-name">TotoMotorWorx</span>, your satisfaction and trust is our top priorities. 
+                            At <span className="brand-name">TotoMotorWorx</span>, your satisfaction and trust {isService ? 'are' : 'is'} our top priorities. 
                         </>
                     )}
                 </p>
 
                 {/* Add to Cart Button */}
                 <button
-                    onClick={() => { addToCart(product.id) }}
+                    onClick={() => { 
+                        console.log("Add to Cart clicked for:", product.name, "Category:", product.category);
+                        addToCart(product.id);
+                    }}
                     disabled={!isInStock}
                     className={`add-to-cart-btn ${!isInStock ? 'disabled-add-to-cart-button' : ''}`}
                 >
-                    {isInStock ? 'Add to Cart' : 'Out of Stock'}
+                    {isService ? 'Book Service' : (isInStock ? 'Add to Cart' : 'Out of Stock')}
                 </button>
             </div>
         </div>
