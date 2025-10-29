@@ -17,16 +17,16 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch products
+      // Fetch products - using the same endpoint as ListProduct
       const productsRes = await fetch('https://totomotorworksbe-production.up.railway.app/allproducts');
       const productsData = await productsRes.json();
       
-      // Fetch users
-      const usersRes = await fetch('https://totomotorworksbe-production.up.railway.app/allusers');
+      // Fetch users - using the same endpoint as UserManagement
+      const usersRes = await fetch('https://totomotorworx-shop-production.up.railway.app/users');
       const usersData = await usersRes.json();
       
       // Calculate low stock items (products with quantity < 10)
-      const lowStock = productsData.filter(product => product.quantity < 10).length;
+      const lowStock = productsData.filter(product => product.quantity && product.quantity < 10).length;
       
       // Calculate total revenue (example calculation)
       const revenue = productsData.reduce((sum, product) => {
