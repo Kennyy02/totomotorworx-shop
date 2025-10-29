@@ -18,7 +18,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       // Fetch products - using the same endpoint as ListProduct
-      const productsRes = await fetch('https://totomotorworksbe-production.up.railway.app/allproducts');
+      const productsRes = await fetch('https://totomotorworx-shop-production.up.railway.app/products');
       const productsData = await productsRes.json();
       
       // Fetch users - using the same endpoint as UserManagement
