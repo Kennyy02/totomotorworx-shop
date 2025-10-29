@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom'
 import navProfile from '../../assets/nav-profile.png'
 import add_product_icon from '../../assets/Product_Cart.png'
 import list_product_icon from '../../assets/Product_list_icon.png'
-import user_management_icon from '../../assets/Users_icon.png'
 import inventory_icon from '../../assets/Inventory.png'
 
 const Navbar = () => {
@@ -39,7 +38,6 @@ const Navbar = () => {
           </button>
           <h2 className='nav-title'>Admin Dashboard</h2>
         </div>
-        <img src={navProfile} className='nav-profile' alt="User Profile" />
       </div>
 
       {/* Mobile Menu Overlay */}
