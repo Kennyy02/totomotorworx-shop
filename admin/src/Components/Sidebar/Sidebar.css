@@ -120,69 +120,19 @@
 
 /* --- Responsive Styles --- */
 @media(max-width: 800px) {
-    /* Make space for fixed bottom navigation */
-    body {
-        padding-bottom: 80px;
-    }
-
+    /* Hide sidebar completely on mobile */
     .sidebar {
-        padding: 8px;
-        flex-direction: row;
-        width: 100%;
-        max-width: none;
-        min-height: auto;
-        justify-content: space-around;
-        background: linear-gradient(90deg, #1a1d29 0%, #252936 100%);
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        z-index: 1000;
-        gap: 4px;
-        overflow-x: auto;
-        overflow-y: hidden;
-    }
-
-    .sidebar::before {
         display: none;
     }
-    
-    .sidebar-item {
-        flex-direction: column;
-        padding: 10px 8px;
-        gap: 4px;
-        font-size: 11px;
-        border-radius: 10px;
-        min-width: 70px;
-        flex: 0 0 auto;
+
+    /* Remove padding-bottom from body if it was added */
+    body {
+        padding-bottom: 0;
     }
 
-    .sidebar-item:hover {
-        transform: translateY(-4px);
-    }
-
-    .sidebar-item.active:hover {
-        transform: translateY(-4px);
-    }
-
-    .sidebar-item.active::after {
-        display: none;
-    }
-    
-    .sidebar-item img {
-        width: 24px;
-        height: 24px;
-    }
-
-    .sidebar-item p {
-        font-size: 10px;
-        text-align: center;
-        line-height: 1.2;
-    }
-
-    /* Adjust admin container to account for fixed bottom nav */
+    /* Remove padding-bottom from admin container if it was added */
     .admin {
-        padding-bottom: 90px;
+        padding-bottom: 0;
     }
 }
 
@@ -207,3 +157,4 @@
 .sidebar-item:nth-child(3) { animation-delay: 0.15s; }
 .sidebar-item:nth-child(4) { animation-delay: 0.2s; }
 .sidebar-item:nth-child(5) { animation-delay: 0.25s; }
+.sidebar-item:nth-child(6) { animation-delay: 0.3s; }

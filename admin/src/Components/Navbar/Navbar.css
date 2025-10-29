@@ -5,63 +5,286 @@
     justify-content: space-between;
     padding: 15px 60px;
     background: #ffffff;
-    /* A more visible but soft shadow for a professional lift */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    /* Subtle rounded corners at the bottom */
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;
-    /* Reduced margin-bottom to fix the gap */
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1001;
 }
 
-/* --- Navigation Title (New) --- */
+/* --- Navbar Left Section --- */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --- Hamburger Button (Hidden on Desktop) --- */
+.hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1002;
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 3px;
+    background: #333333;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger-line.open:nth-child(1) {
+    transform: rotate(45deg) translateY(8px);
+}
+
+.hamburger-line.open:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-line.open:nth-child(3) {
+    transform: rotate(-45deg) translateY(-8px);
+}
+
+/* --- Navigation Title --- */
 .nav-title {
-    font-size: 28px; /* Larger, clearer text */
+    font-size: 28px;
     font-weight: 700;
-    color: #333333; /* Dark color for a professional look */
-    /* Remove default margin from the heading tag */
+    color: #333333;
     margin: 0;
 }
-
-/* --- Navigation Logo (Old - kept for reference, but should be removed) --- */
-/*
-.nav-logo {
-    width: 150px; 
-    height: auto; 
-}
-*/
 
 /* --- Navigation Profile Picture --- */
 .nav-profile {
     width: 60px;
     height: 60px;
     object-fit: cover;
-    /* Changed to a circular profile picture */
     border-radius: 50%;
-    /* Added a subtle border for a cleaner look */
     border: 2px solid #e0e0e0;
     cursor: pointer;
-    /* Added a smooth transition for interactive effects */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .nav-profile:hover {
-    /* A slight lift and shadow on hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* --- Responsive Styles (Refined) --- */
+/* --- Mobile Menu Overlay --- */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+}
+
+/* --- Mobile Menu --- */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100%;
+    background: linear-gradient(180deg, #1a1d29 0%, #252936 100%);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+}
+
+.mobile-menu.active {
+    left: 0;
+}
+
+/* --- Mobile Menu Header --- */
+.mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-menu-header h3 {
+    color: #ffffff;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 36px;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Mobile Menu Items --- */
+.mobile-menu-items {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mobile-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    gap: 16px;
+    cursor: pointer;
+    color: #e4e6eb;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mobile-menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(8px);
+    border-color: rgba(96, 121, 255, 0.4);
+}
+
+.mobile-menu-item.active {
+    background: linear-gradient(135deg, #6079ff 0%, #7c5dff 100%);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(96, 121, 255, 0.4);
+}
+
+.mobile-menu-item img {
+    width: 22px;
+    height: 22px;
+    filter: brightness(0.9);
+}
+
+.mobile-menu-item.active img {
+    filter: brightness(2);
+}
+
+.mobile-menu-item p {
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+/* --- Responsive Styles --- */
 @media(max-width: 800px) {
     .navbar {
         padding: 15px 20px;
         margin-bottom: 15px;
     }
-    .nav-logo {
-        width: 120px;
+
+    .navbar-left {
+        gap: 15px;
     }
+
+    /* Show hamburger button on mobile */
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .nav-title {
+        font-size: 20px;
+    }
+
     .nav-profile {
         width: 50px;
         height: 50px;
+    }
+
+    /* Show mobile menu elements */
+    .mobile-menu-overlay,
+    .mobile-menu {
+        display: block;
+    }
+}
+
+@media(max-width: 480px) {
+    .navbar {
+        padding: 12px 15px;
+    }
+
+    .navbar-left {
+        gap: 12px;
+    }
+
+    .hamburger-btn {
+        width: 26px;
+        height: 22px;
+    }
+
+    .hamburger-line {
+        height: 2.5px;
+    }
+
+    .nav-title {
+        font-size: 18px;
+    }
+
+    .nav-profile {
+        width: 45px;
+        height: 45px;
+    }
+
+    .mobile-menu {
+        width: 250px;
+    }
+
+    .mobile-menu-header {
+        padding: 16px;
+    }
+
+    .mobile-menu-header h3 {
+        font-size: 18px;
+    }
+
+    .mobile-menu-items {
+        padding: 16px;
+    }
+
+    .mobile-menu-item {
+        padding: 14px 16px;
+        font-size: 14px;
+    }
+
+    .mobile-menu-item img {
+        width: 20px;
+        height: 20px;
     }
 }
