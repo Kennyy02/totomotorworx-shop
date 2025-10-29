@@ -6,10 +6,12 @@ const Dashboard = () => {
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalUsers: 0,
-    lowStockItems: 0,
-    totalRevenue: 0
+    lowStockItems: 0
   });
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     fetchDashboardData();
@@ -17,29 +19,27 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch products - using the same endpoint as ListProduct
+      // Fetch products
       const productsRes = await fetch('https://totomotorworx-shop-production.up.railway.app/products');
       const productsData = await productsRes.json();
       
-      // Fetch users - using the same endpoint as UserManagement
+      // Fetch users
       const usersRes = await fetch('https://totomotorworx-shop-production.up.railway.app/users');
       const usersData = await usersRes.json();
       
-      // Calculate low stock items (products with quantity < 10)
-      const lowStock = productsData.filter(product => product.quantity && product.quantity < 10).length;
-      
-      // Calculate total revenue (example calculation)
-      const revenue = productsData.reduce((sum, product) => {
-        return sum + (product.new_price * (product.sold || 0));
-      }, 0);
+      // Calculate low stock items (products with stock < 10)
+      const lowStock = productsData.filter(product => {
+        const stock = product.stock !== undefined ? product.stock : 0;
+        return stock < 10;
+      }).length;
 
       setStats({
         totalProducts: productsData.length,
         totalUsers: usersData.length,
-        lowStockItems: lowStock,
-        totalRevenue: revenue
+        lowStockItems: lowStock
       });
       
+      setProducts(productsData);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -53,6 +53,28 @@ const Dashboard = () => {
     { title: 'Manage Users', icon: '👥', link: '/usermanagement', color: '#ff6b9d' },
     { title: 'Check Inventory', icon: '📊', link: '/inventory', color: '#ffa726' }
   ];
+
+  // Format currency
+  const formatPeso = (value) => {
+    if (value === null || value === undefined) return "N/A";
+    return value.toLocaleString("en-PH", {
+      style: "currency",
+      currency: "PHP",
+      minimumFractionDigits: 2
+    });
+  };
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  const goToPage = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   return (
     <div className="dashboard-container">
@@ -99,16 +121,82 @@ const Dashboard = () => {
                 <p>Low Stock Items</p>
               </div>
             </div>
+          </div>
 
-            <div className="stat-card" style={{ borderTopColor: '#4caf50' }}>
-              <div className="stat-icon" style={{ background: 'linear-gradient(135deg, #4caf50 0%, #66bb6a 100%)' }}>
-                💰
-              </div>
-              <div className="stat-info">
-                <h3>₱{stats.totalRevenue.toLocaleString()}</h3>
-                <p>Total Revenue</p>
-              </div>
+          {/* Inventory Display */}
+          <div className="inventory-section">
+            <h2>Current Inventory</h2>
+            <div className="inventory-table-wrapper">
+              <table className="inventory-table">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentProducts.length === 0 ? (
+                    <tr><td colSpan="6" style={{ textAlign: 'center' }}>No products found</td></tr>
+                  ) : (
+                    currentProducts.map((product) => {
+                      const stock = product.stock !== undefined ? product.stock : 0;
+                      const isLowStock = stock < 10;
+                      
+                      return (
+                        <tr key={product.id}>
+                          <td data-label="Image">
+                            {product.image && (
+                              <img src={product.image} alt={product.name} style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '8px' }} />
+                            )}
+                          </td>
+                          <td data-label="Product Name">{product.name}</td>
+                          <td data-label="Category">{product.category}</td>
+                          <td data-label="Price">{formatPeso(product.new_price)}</td>
+                          <td data-label="Stock">
+                            <span style={{ 
+                              fontWeight: 'bold',
+                              color: stock === 0 ? '#f44336' : isLowStock ? '#ff9800' : '#4caf50'
+                            }}>
+                              {stock}
+                            </span>
+                          </td>
+                          <td data-label="Status">
+                            <span className={`status-badge ${stock === 0 ? 'out-of-stock' : isLowStock ? 'low-stock' : 'in-stock'}`}>
+                              {stock === 0 ? 'Out of Stock' : isLowStock ? 'Low Stock' : 'In Stock'}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="pagination-controls">
+                <button onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
+                  Prev
+                </button>
+                {[...Array(totalPages)].map((_, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={() => goToPage(index + 1)}
+                    className={currentPage === index + 1 ? "active" : ""}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button onClick={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>
+                  Next
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Quick Actions */}
@@ -133,7 +221,7 @@ const Dashboard = () => {
                   <span className="alert-icon">⚠️</span>
                   <div className="alert-content">
                     <h4>Low Stock Warning</h4>
-                    <p>You have {stats.lowStockItems} product(s) with low inventory. Check inventory now.</p>
+                    <p>You have {stats.lowStockItems} product(s) with low inventory (stock below 10). Check inventory now.</p>
                   </div>
                   <Link to="/inventory" className="alert-action">View</Link>
                 </div>
