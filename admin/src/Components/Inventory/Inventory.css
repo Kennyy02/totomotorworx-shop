@@ -187,28 +187,165 @@
   opacity: 0.4;
 }
 
-@media (max-width: 800px) {
-  .inventory-table,
-  .user-table {
-    font-size: 12px;
+/* ============================================
+   MOBILE RESPONSIVENESS
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .inventory-container {
+    padding: 24px;
+    margin: 24px auto;
+  }
+
+  .inventory-container h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .inventory-table {
+    font-size: 13px;
   }
 
   .inventory-table th,
-  .inventory-table td,
-  .user-table th,
-  .user-table td {
-    padding: 10px 8px;
+  .inventory-table td {
+    padding: 12px 10px;
   }
 
-  .pagination,
+  .inventory-table img {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .inventory-container {
+    padding: 16px;
+    margin: 16px;
+    border-radius: 12px;
+  }
+
+  .inventory-container h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* Hide table and show card layout */
+  .inventory-table {
+    display: block;
+    border-spacing: 0;
+  }
+
+  .inventory-table thead {
+    display: none;
+  }
+
+  .inventory-table tbody {
+    display: block;
+  }
+
+  .inventory-table tr {
+    display: block;
+    margin-bottom: 16px;
+    background: #fafbfc;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .inventory-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid #eee !important;
+  }
+
+  .inventory-table td:last-child {
+    border-bottom: none !important;
+  }
+
+  .inventory-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 12px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  .inventory-table img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .inventory-table input[type="text"] {
+    width: 100px;
+  }
+
+  .save-btn,
+  .stock-input {
+    font-size: 12px;
+    padding: 8px 16px;
+    height: 36px;
+  }
+
   .pagination-controls {
     flex-wrap: wrap;
     gap: 8px;
+    margin-top: 24px;
+    padding-top: 16px;
   }
 
-  .pagination button,
   .pagination-controls button {
     padding: 8px 12px;
     font-size: 12px;
+    min-width: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .inventory-container {
+    padding: 12px;
+    margin: 12px;
+  }
+
+  .inventory-container h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .inventory-table tr {
+    padding: 12px;
+  }
+
+  .inventory-table td {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .inventory-table td::before {
+    font-size: 11px;
+  }
+
+  .inventory-table img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .inventory-table input[type="text"] {
+    width: 80px;
+    font-size: 13px;
+  }
+
+  .save-btn {
+    font-size: 11px;
+    padding: 6px 12px;
+    height: 32px;
   }
 }

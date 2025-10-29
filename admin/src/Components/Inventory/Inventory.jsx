@@ -14,9 +14,9 @@ const Inventory = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // Show 5 products per page (you can adjust)
+  const itemsPerPage = 5;
 
-  // --- Currency Formatter for PHP ---
+  // Currency Formatter for PHP
   const formatPeso = (value) => {
     if (value === null || value === undefined) return "N/A";
     return value.toLocaleString("en-PH", {
@@ -101,7 +101,7 @@ const Inventory = () => {
     }
   };
 
-  // --- Pagination logic ---
+  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
@@ -117,7 +117,7 @@ const Inventory = () => {
   if (error) return <p className="error-message">{error}</p>;
 
   return (
-    <div className="inventory-management-container">
+    <div className="inventory-container">
       <h2>Inventory Management</h2>
       <table className="inventory-table">
         <thead>
@@ -140,17 +140,17 @@ const Inventory = () => {
           ) : (
             currentProducts.map((product) => (
               <tr key={product.id}>
-                <td>{product.id}</td>
-                <td>
+                <td data-label="ID">{product.id}</td>
+                <td data-label="Image">
                   {product.image && (
                     <img src={product.image} alt={product.name} className="product-thumbnail-img" />
                   )}
                 </td>
-                <td>{product.name}</td>
-                <td>{product.category}</td>
-                <td>{formatPeso(product.old_price)}</td>
-                <td>{formatPeso(product.new_price)}</td>
-                <td>
+                <td data-label="Product Name">{product.name}</td>
+                <td data-label="Category">{product.category}</td>
+                <td data-label="Old Price">{formatPeso(product.old_price)}</td>
+                <td data-label="New Price">{formatPeso(product.new_price)}</td>
+                <td data-label="Current Stock">
                   <input
                     type="text"
                     value={
@@ -162,12 +162,12 @@ const Inventory = () => {
                     className="stock-input"
                   />
                 </td>
-                <td>{new Date(product.date).toLocaleDateString()}</td>
-                <td>{product.available ? 'Yes' : 'No'}</td>
-                <td>
+                <td data-label="Date Added">{new Date(product.date).toLocaleDateString()}</td>
+                <td data-label="Available">{product.available ? 'Yes' : 'No'}</td>
+                <td data-label="Actions">
                   <button
                     onClick={() => handleSave(product.id)}
-                    className="save-stock-button"
+                    className="save-btn"
                     disabled={savingId === product.id}
                   >
                     {savingId === product.id ? 'Saving...' : 'Save Stock'}
