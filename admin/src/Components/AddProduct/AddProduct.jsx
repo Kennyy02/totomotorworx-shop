@@ -1,6 +1,29 @@
 import React, { useState } from 'react'
 import './AddProduct.css'
-import upload_area from '../../assets/upload_area.svg';
+
+// Upload Icon Component
+const UploadIcon = () => (
+  <div className='addproduct-thumbnail-img' style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '12px'
+  }}>
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#6079ff" strokeWidth="2" strokeDasharray="4 4"/>
+      <path d="M12 8v8M8 12h8" stroke="#6079ff" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+    <div style={{ textAlign: 'center' }}>
+      <p style={{ margin: 0, color: '#6079ff', fontSize: '14px', fontWeight: '600' }}>
+        Upload Product Image
+      </p>
+      <p style={{ margin: '4px 0 0 0', color: '#999', fontSize: '12px' }}>
+        PNG, JPG or SVG
+      </p>
+    </div>
+  </div>
+);
 
 const AddProduct = () => {
 
@@ -116,7 +139,11 @@ const AddProduct = () => {
             </div>
             <div className="addproduct-itemfield">
                 <label htmlFor="file-input">
-                    <img src={image ? URL.createObjectURL(image) : upload_area} className='addproduct-thumbnail-img' alt="Upload Area" />
+                    {image ? (
+                        <img src={URL.createObjectURL(image)} className='addproduct-thumbnail-img' alt="Product" />
+                    ) : (
+                        <UploadIcon />
+                    )}
                 </label>
                 <input onChange={imageHandler} type="file" name='image' id='file-input' hidden />
             </div>
