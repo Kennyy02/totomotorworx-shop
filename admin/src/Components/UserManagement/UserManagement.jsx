@@ -97,13 +97,13 @@ export default function UserManagement() {
             <tbody>
               {currentUsers.map((user) => (
                 <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.password}</td>
-                  <td>{new Date(user.date).toLocaleDateString()}</td>
-                  <td>{user.disabled ? "Disabled" : "Active"}</td>
-                  <td>
+                  <td data-label="ID">{user.id}</td>
+                  <td data-label="Name">{user.name}</td>
+                  <td data-label="Email">{user.email}</td>
+                  <td data-label="Password">{user.password}</td>
+                  <td data-label="Registered Date">{new Date(user.date).toLocaleDateString()}</td>
+                  <td data-label="Status">{user.disabled ? "Disabled" : "Active"}</td>
+                  <td data-label="Action">
                     {user.disabled ? (
                       <button
                         className="enable-button"
@@ -126,29 +126,31 @@ export default function UserManagement() {
           </table>
 
           {/* Pagination */}
-          <div className="pagination">
-            <button
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
+          {totalPages > 1 && (
+            <div className="pagination">
               <button
-                key={index}
-                className={currentPage === index + 1 ? "active" : ""}
-                onClick={() => setCurrentPage(index + 1)}
+                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                disabled={currentPage === 1}
               >
-                {index + 1}
+                Previous
               </button>
-            ))}
-            <button
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  className={currentPage === index + 1 ? "active" : ""}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
