@@ -27,11 +27,13 @@ const Navbar = () => {
       const data = await response.json();
       
       // Transform categories for navigation
+      // Exclude "Service" from products dropdown
       const transformedCategories = data
-        .filter(cat => cat.name.toLowerCase() !== 'service') // Exclude "Service" from products dropdown
+        .filter(cat => cat.name.toLowerCase() !== 'service')
         .map(cat => ({
           name: cat.name,
-          path: `/products/${cat.name.toLowerCase().replace(/\s+/g, '-')}`
+          // ✅ Use exact category name for URL (lowercase for clean URLs)
+          path: `/products/${cat.name.toLowerCase()}`
         }));
       
       setCategories(transformedCategories);
@@ -41,11 +43,11 @@ const Navbar = () => {
       // Fallback to hardcoded categories if API fails
       setCategories([
         { name: "Tires", path: "/products/tires" },
-        { name: "Grips", path: "/products/grip" },
-        { name: "Motor Oil", path: "/products/motor-oil" },
-        { name: "Helmets", path: "/products/helmet" },
-        { name: "Spray Paints", path: "/products/spray-paint" },
-        { name: "Cables", path: "/products/cable" }
+        { name: "Grips", path: "/products/grips" },
+        { name: "Motor Oil", path: "/products/motor oil" },
+        { name: "Helmets", path: "/products/helmets" },
+        { name: "Spray Paints", path: "/products/spray paints" },
+        { name: "Cables", path: "/products/cables" }
       ]);
       setLoadingCategories(false);
     }
@@ -69,7 +71,7 @@ const Navbar = () => {
           {menu === "home" ? <hr /> : <></>}
         </li>
 
-        {/* Dynamic Products Dropdown */}
+        {/* ✅ Dynamic Products Dropdown */}
         <li className="dropdown-container" onClick={() => { setMenu("products") }}>
           <Link style={{ textDecoration: 'none' }} to='/products'>Products</Link>
           {menu === "products" ? <hr /> : <></>}
