@@ -5,7 +5,6 @@ import add_product_icon from '../../assets/Product_Cart.png';
 import list_product_icon from '../../assets/Product_list_icon.png';
 import user_management_icon from '../../assets/Users_icon.png';
 import inventory_icon from '../../assets/Inventory.png';
-import category_icon from '../../assets/category_icon.png'; // Add your category icon
 
 const Sidebar = () => {
   const location = useLocation();
@@ -33,10 +32,10 @@ const Sidebar = () => {
         </div>
       </Link>
 
-      {/* ✅ FIXED: Category Management */}
+      {/* ✅ Category Management with Emoji Icon */}
       <Link to={'/categories'} style={{textDecoration:"none"}}>
         <div className={`sidebar-item ${location.pathname === '/categories' ? 'active' : ''}`}>
-          <img src={category_icon} alt="" />
+          <span style={{fontSize: '22px', minWidth: '22px', textAlign: 'center'}}>📂</span>
           <p>Category Management</p>
         </div>
       </Link>
