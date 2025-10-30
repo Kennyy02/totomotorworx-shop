@@ -43,7 +43,7 @@ const Navbar = () => {
       // Fallback to hardcoded categories if API fails
       setCategories([
         { name: "Tires", path: "/products/tires" },
-        { name: "Grips", path: "/products/grips" },
+        { name: "Grips", path: "/categories/grips" },
         { name: "Motor Oil", path: "/products/motor oil" },
         { name: "Helmets", path: "/products/helmets" },
         { name: "Spray Paints", path: "/products/spray paints" },
