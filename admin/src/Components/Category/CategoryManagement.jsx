@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './CategoryManagement.css'
+import './CategoryManagement.css';
+
 const CategoryManagement = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState('');
@@ -124,9 +125,9 @@ const CategoryManagement = () => {
 
   if (loading) {
     return (
-      <div style={styles.container}>
-        <div style={styles.loadingState}>
-          <div style={styles.spinner}></div>
+      <div className="category-container">
+        <div className="loading-state">
+          <div className="spinner"></div>
           <p>Loading categories...</p>
         </div>
       </div>
@@ -134,75 +135,69 @@ const CategoryManagement = () => {
   }
 
   return (
-    <div style={styles.container}>
-      <style>{cssStyles}</style>
-      
-      <div style={styles.header}>
-        <h2 style={styles.headerTitle}>📂 Category Management</h2>
-        <p style={styles.subtitle}>Manage product categories for your store</p>
+    <div className="category-container">
+      <div className="category-header">
+        <h2>📂 Category Management</h2>
+        <p className="category-subtitle">Manage product categories for your store</p>
       </div>
 
       {alert.show && (
-        <div style={{...styles.alert, ...(alert.type === 'success' ? styles.alertSuccess : styles.alertError)}}>
-          <span style={{fontSize: '20px'}}>{alert.type === 'success' ? '✓' : '⚠'}</span>
+        <div className={`alert alert-${alert.type}`}>
+          <span className="alert-icon">{alert.type === 'success' ? '✓' : '⚠'}</span>
           {alert.message}
-          <button style={styles.alertClose} onClick={() => setAlert({ show: false, message: '', type: '' })}>×</button>
+          <button className="alert-close" onClick={() => setAlert({ show: false, message: '', type: '' })}>×</button>
         </div>
       )}
 
-      <div style={styles.addSection}>
-        <h3 style={styles.sectionTitle}>Add New Category</h3>
-        <div style={styles.addForm}>
+      <div className="add-category-section">
+        <h3>Add New Category</h3>
+        <div className="add-category-form">
           <input
             type="text"
-            style={styles.input}
-            className="category-input-focus"
+            className="category-input"
             placeholder="Enter category name (e.g., Brake Pads)"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAddCategory()}
             maxLength={100}
           />
-          <button onClick={handleAddCategory} style={styles.btnAdd} className="btn-hover">
-            <span style={{fontSize: '18px'}}>+</span>
+          <button onClick={handleAddCategory} className="btn-add">
+            <span className="btn-icon">+</span>
             Add Category
           </button>
         </div>
       </div>
 
-      <div>
-        <h3 style={styles.sectionTitle}>Existing Categories ({categories.length})</h3>
+      <div className="categories-section">
+        <h3>Existing Categories ({categories.length})</h3>
         
         {categories.length === 0 ? (
-          <div style={styles.emptyState}>
+          <div className="empty-state">
             <p>No categories found. Add your first category above!</p>
           </div>
         ) : (
-          <div style={styles.grid}>
+          <div className="categories-grid">
             {categories.map((category) => (
-              <div key={category.id} style={styles.card} className="category-card-hover">
+              <div key={category.id} className="category-card">
                 {editingId === category.id ? (
-                  <div style={styles.editMode}>
+                  <div className="category-edit-mode">
                     <input
                       type="text"
-                      style={styles.inputEdit}
-                      className="category-input-focus"
+                      className="category-input-edit"
                       value={editingName}
                       onChange={(e) => setEditingName(e.target.value)}
                       maxLength={100}
                       autoFocus
                     />
-                    <div style={styles.actions}>
+                    <div className="category-actions">
                       <button 
-                        style={styles.btnSave}
-                        className="btn-hover"
+                        className="btn-save"
                         onClick={() => handleEditCategory(category.id)}
                       >
                         ✓ Save
                       </button>
                       <button 
-                        style={styles.btnCancel}
-                        className="btn-hover"
+                        className="btn-cancel"
                         onClick={cancelEditing}
                       >
                         × Cancel
@@ -211,24 +206,22 @@ const CategoryManagement = () => {
                   </div>
                 ) : (
                   <>
-                    <div style={styles.cardInfo}>
-                      <span style={styles.categoryIcon}>🏷️</span>
-                      <h4 style={styles.categoryName}>{category.name}</h4>
-                      <p style={styles.categoryMeta}>
+                    <div className="category-info">
+                      <span className="category-icon">🏷️</span>
+                      <h4>{category.name}</h4>
+                      <p className="category-meta">
                         Created: {new Date(category.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div style={styles.actions}>
+                    <div className="category-actions">
                       <button 
-                        style={styles.btnEdit}
-                        className="btn-hover"
+                        className="btn-edit"
                         onClick={() => startEditing(category)}
                       >
                         ✎ Edit
                       </button>
                       <button 
-                        style={styles.btnDelete}
-                        className="btn-hover"
+                        className="btn-delete"
                         onClick={() => handleDeleteCategory(category.id)}
                       >
                         🗑 Delete

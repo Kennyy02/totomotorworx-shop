@@ -8,6 +8,7 @@ import ListProduct from '../../Components/ListProduct/ListProduct';
 import UserManagement from '../../Components/UserManagement/UserManagement';
 import Inventory from '../../Components/Inventory/Inventory';
 import CartAnalytics from '../../Components/Analytics/CartAnalytics';
+import CategoryManagement from '../../Components/Category/CategoryManagement';
 
 const Admin = () => {
   // Fix: Use correct key 'auth-token' to get token
