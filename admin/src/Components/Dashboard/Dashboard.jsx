@@ -15,6 +15,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchDashboardData();
+    
+    // Auto-refresh every 30 seconds to keep data current
+    const interval = setInterval(() => {
+      fetchDashboardData();
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchDashboardData = async () => {
@@ -28,10 +35,18 @@ const Dashboard = () => {
       const usersData = await usersRes.json();
       
       // Calculate low stock items (products with stock < 10)
+      // Important: Convert stock to number and handle null/undefined
       const lowStock = productsData.filter(product => {
-        const stock = product.stock !== undefined ? product.stock : 0;
+        const stock = Number(product.stock) || 0;
         return stock < 10;
       }).length;
+
+      console.log('📊 Dashboard Stats:', {
+        totalProducts: productsData.length,
+        totalUsers: usersData.length,
+        lowStockItems: lowStock,
+        allStocks: productsData.map(p => ({ name: p.name, stock: p.stock }))
+      });
 
       setStats({
         totalProducts: productsData.length,
@@ -50,8 +65,9 @@ const Dashboard = () => {
   const quickActions = [
     { title: 'Add New Product', icon: '📦', link: '/addproduct', color: '#6079ff' },
     { title: 'View Products', icon: '📋', link: '/listproduct', color: '#7c5dff' },
-    { title: 'Manage Users', icon: '👥', link: '/usermanagement', color: '#ff6b9d' },
-    { title: 'Check Inventory', icon: '📊', link: '/inventory', color: '#ffa726' }
+    { title: 'Manage Categories', icon: '📂', link: '/categories', color: '#ff6b9d' },
+    { title: 'Manage Users', icon: '👥', link: '/usermanagement', color: '#ffa726' },
+    { title: 'Check Inventory', icon: '📊', link: '/inventory', color: '#66bb6a' }
   ];
 
   // Format currency
@@ -143,7 +159,7 @@ const Dashboard = () => {
                     <tr><td colSpan="6" style={{ textAlign: 'center' }}>No products found</td></tr>
                   ) : (
                     currentProducts.map((product) => {
-                      const stock = product.stock !== undefined ? product.stock : 0;
+                      const stock = Number(product.stock) || 0;
                       const isLowStock = stock < 10;
                       
                       return (
@@ -226,14 +242,6 @@ const Dashboard = () => {
                   <Link to="/inventory" className="alert-action">View</Link>
                 </div>
               )}
-              
-              <div className="alert alert-info">
-                <span className="alert-icon">ℹ️</span>
-                <div className="alert-content">
-                  <h4>System Status</h4>
-                  <p>All systems are operational. Railway backend is connected.</p>
-                </div>
-              </div>
 
               <div className="alert alert-success">
                 <span className="alert-icon">✅</span>
