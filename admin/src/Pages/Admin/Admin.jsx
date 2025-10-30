@@ -21,7 +21,7 @@ const Admin = () => {
         {/* Default route - Dashboard Overview */}
         <Route path='/' element={<Dashboard />} />
         <Route path='/addproduct' element={<AddProduct />} />
-        <Route path="/admin/categories" element={<CategoryManagement />} />
+        <Route path='/categories' element={<CategoryManagement />} />
         <Route path='/listproduct' element={<ListProduct />} />
         <Route path='/usermanagement' element={<UserManagement authToken={authToken} />} />
         <Route path='/inventory' element={<Inventory/>} />
