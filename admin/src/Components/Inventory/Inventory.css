@@ -191,32 +191,6 @@
    MOBILE RESPONSIVENESS
    ============================================ */
 
-@media (max-width: 1024px) {
-  .inventory-container {
-    padding: 24px;
-    margin: 24px auto;
-  }
-
-  .inventory-container h2 {
-    font-size: 24px;
-    margin-bottom: 24px;
-  }
-
-  .inventory-table {
-    font-size: 13px;
-  }
-
-  .inventory-table th,
-  .inventory-table td {
-    padding: 12px 10px;
-  }
-
-  .inventory-table img {
-    width: 48px;
-    height: 48px;
-  }
-}
-
 @media (max-width: 768px) {
   .inventory-container {
     padding: 16px;
@@ -284,15 +258,25 @@
     height: 64px;
   }
 
+  /* ✅ CRITICAL FIX: Mobile input styling */
   .inventory-table input[type="text"] {
     width: 100px;
+    min-height: 44px; /* Apple's minimum tap target */
+    font-size: 16px; /* Prevents iOS zoom */
+    padding: 0 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    text-align: center;
+    background: white;
+    -webkit-appearance: none; /* Remove iOS styling */
+    appearance: none;
   }
 
-  .save-btn,
-  .stock-input {
-    font-size: 12px;
-    padding: 8px 16px;
-    height: 36px;
+  .save-btn {
+    font-size: 13px;
+    padding: 10px 16px;
+    min-height: 44px; /* Apple's minimum tap target */
+    width: auto;
   }
 
   .pagination-controls {
@@ -303,9 +287,10 @@
   }
 
   .pagination-controls button {
-    padding: 8px 12px;
-    font-size: 12px;
-    min-width: 40px;
+    padding: 10px 12px;
+    font-size: 13px;
+    min-width: 44px;
+    min-height: 44px;
   }
 }
 
@@ -338,14 +323,18 @@
     height: 56px;
   }
 
+  /* ✅ CRITICAL FIX: Small mobile input */
   .inventory-table input[type="text"] {
-    width: 80px;
-    font-size: 13px;
+    width: 90px;
+    min-height: 44px;
+    font-size: 16px; /* Must be 16px to prevent iOS zoom */
+    padding: 0 10px;
   }
 
   .save-btn {
-    font-size: 11px;
-    padding: 6px 12px;
-    height: 32px;
+    font-size: 12px;
+    padding: 8px 12px;
+    min-height: 44px;
+    width: 100%;
   }
 }

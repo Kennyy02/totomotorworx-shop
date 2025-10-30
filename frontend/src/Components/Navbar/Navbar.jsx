@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import './Navbar.css';
 import bike from '../Assets/bike.png';
 import cart_icon from '../Assets/cart_icon.png';
@@ -10,15 +10,36 @@ const Navbar = () => {
   const [menu, setMenu] = useState("home");
   const { getTotalCartItems } = useContext(HomeContext);
   const menuRef = useRef();
-  // ✅ Dynamic product categories
-  const productCategories = [
-    { name: "Tires", path: "/products/tires" },
-    { name: "Grips", path: "/products/grip" },
-    { name: "Motor Oil", path: "/products/motor-oil" },
-    { name: "Helmets", path: "/products/helmet" },
-    { name: "Spray Paints", path: "/products/spray-paint" },
-    { name: "Cables", path: "/products/cable" }
-  ];
+  
+  // ✅ NEW: Fetch categories dynamically from database
+  const [productCategories, setProductCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('https://totomotorworx-shop-production.up.railway.app/categories');
+      const data = await response.json();
+      
+      // Transform categories to match navbar format
+      const formattedCategories = data.map(cat => ({
+        name: cat.name,
+        path: `/products/${cat.name.toLowerCase().replace(/\s+/g, '-')}`
+      }));
+      
+      setProductCategories(formattedCategories);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Fallback to default categories if fetch fails
+      setProductCategories([
+        { name: "Tires", path: "/products/tires" },
+        { name: "Grips", path: "/products/grip" },
+        { name: "Motor Oil", path: "/products/motor-oil" }
+      ]);
+    }
+  };
 
   const dropdown_toggle = (e) => {
     menuRef.current.classList.toggle('nav-menu-visible');
@@ -38,7 +59,7 @@ const Navbar = () => {
           {menu === "home" ? <hr /> : <></>}
         </li>
 
-        {/* ✅ Fixed Products Dropdown */}
+        {/* ✅ Dynamic Products Dropdown */}
         <li className="dropdown-container" onClick={() => { setMenu("products") }}>
           <Link style={{ textDecoration: 'none' }} to='/products'>Products</Link>
           {menu === "products" ? <hr /> : <></>}
