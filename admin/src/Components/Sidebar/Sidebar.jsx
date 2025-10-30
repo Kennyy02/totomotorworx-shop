@@ -1,10 +1,11 @@
-import React from 'react'
-import './Sidebar.css'
-import { Link, useLocation } from 'react-router-dom'
+import React from 'react';
+import './Sidebar.css';
+import { Link, useLocation } from 'react-router-dom';
 import add_product_icon from '../../assets/Product_Cart.png';
 import list_product_icon from '../../assets/Product_list_icon.png';
 import user_management_icon from '../../assets/Users_icon.png';
-import inventory_icon from '../../assets/Inventory.png'
+import inventory_icon from '../../assets/Inventory.png';
+import category_icon from '../../assets/category_icon.png'; // Add your category icon
 
 const Sidebar = () => {
   const location = useLocation();
@@ -17,36 +18,43 @@ const Sidebar = () => {
           <p>Dashboard</p>
         </div>
       </Link>
+
       <Link to={'/addproduct'} style={{textDecoration:"none"}}>
         <div className={`sidebar-item ${location.pathname === '/addproduct' ? 'active' : ''}`}>
           <img src={add_product_icon} alt="" />
           <p>Add Products</p>
         </div>
       </Link>
-      <li onClick={() => { setMenu("categories") }}>
-      <Link style={{ textDecoration: 'none' }} to='/admin/categories'>
-          📂 Category Management
-      </Link>
-          {menu === "categories" ? <hr /> : <></>}
-      </li>
+
       <Link to={'/listproduct'} style={{textDecoration:"none"}}>
         <div className={`sidebar-item ${location.pathname === '/listproduct' ? 'active' : ''}`}>
           <img src={list_product_icon} alt="" />
           <p>Product List</p>
         </div>
       </Link>
+
+      {/* ✅ FIXED: Category Management */}
+      <Link to={'/categories'} style={{textDecoration:"none"}}>
+        <div className={`sidebar-item ${location.pathname === '/categories' ? 'active' : ''}`}>
+          <img src={category_icon} alt="" />
+          <p>Category Management</p>
+        </div>
+      </Link>
+
       <Link to={'/usermanagement'} style={{textDecoration:"none"}}>
         <div className={`sidebar-item ${location.pathname === '/usermanagement' ? 'active' : ''}`}>
           <img src={user_management_icon} alt="" />
           <p>Manage Users</p>
         </div>
       </Link>
+
       <Link to={'/inventory'} style={{textDecoration:"none"}}>
         <div className={`sidebar-item ${location.pathname === '/inventory' ? 'active' : ''}`}>
           <img src={inventory_icon} alt="" />
-          <p>Inventory management</p>
+          <p>Inventory Management</p>
         </div>
       </Link>
+
       <Link to={'/analytics'} style={{textDecoration:"none"}}>
         <div className={`sidebar-item ${location.pathname === '/analytics' ? 'active' : ''}`}>
           <img src={inventory_icon} alt="" />
@@ -54,7 +62,7 @@ const Sidebar = () => {
         </div>
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
