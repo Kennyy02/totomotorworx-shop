@@ -15,7 +15,7 @@ const CategoryManagement = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://totomotorworx-shop-production.up.railway.app/categories');
+      const response = await fetch('https://totomotorworx-shop-production.up.railway.app/categories');
       const data = await response.json();
       setCategories(data);
       setLoading(false);
@@ -38,7 +38,7 @@ const CategoryManagement = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/categories', {
+      const response = await fetch('https://totomotorworx-shop-production.up.railway.app/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newCategory.trim() })
@@ -66,7 +66,7 @@ const CategoryManagement = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/categories/${id}`, {
+      const response = await fetch(`https://totomotorworx-shop-production.up.railway.app/categories/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editingName.trim() })
@@ -94,7 +94,7 @@ const CategoryManagement = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/categories/${id}`, {
+      const response = await fetch(`https://totomotorworx-shop-production.up.railway.app/categories/${id}`, {
         method: 'DELETE'
       });
 
@@ -244,3 +244,5 @@ const CategoryManagement = () => {
     </div>
   );
 };
+
+export default CategoryManagement;
