@@ -15,7 +15,7 @@ const CategoryManagement = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:4000/categories');
+      const response = await fetch('http://totomotorworx-shop-production.up.railway.app/categories');
       const data = await response.json();
       setCategories(data);
       setLoading(false);
