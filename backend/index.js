@@ -122,6 +122,195 @@ app.post("/upload", upload.single('product'), (req, res) => {
   });
 });
 
+// --- CATEGORY MANAGEMENT ROUTES ---
+
+// Get all categories
+app.get("/categories", (req, res) => {
+  const query = "SELECT * FROM categories ORDER BY name ASC";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching categories:", err);
+      return res.status(500).json({ error: "Failed to fetch categories" });
+    }
+    res.json(results);
+  });
+});
+
+// Add new category
+app.post("/categories", (req, res) => {
+  const { name } = req.body;
+  
+  if (!name || !name.trim()) {
+    return res.status(400).json({ 
+      success: false, 
+      error: "Category name is required" 
+    });
+  }
+
+  const trimmedName = name.trim();
+  
+  // Check if category already exists (case-insensitive)
+  db.query(
+    "SELECT * FROM categories WHERE LOWER(name) = LOWER(?)",
+    [trimmedName],
+    (err, results) => {
+      if (err) {
+        console.error("Error checking category:", err);
+        return res.status(500).json({ 
+          success: false, 
+          error: "Database error" 
+        });
+      }
+
+      if (results.length > 0) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Category already exists" 
+        });
+      }
+
+      // Insert new category
+      db.query(
+        "INSERT INTO categories (name) VALUES (?)",
+        [trimmedName],
+        (err, result) => {
+          if (err) {
+            console.error("Error adding category:", err);
+            return res.status(500).json({ 
+              success: false, 
+              error: "Failed to add category" 
+            });
+          }
+
+          res.json({ 
+            success: true, 
+            message: "Category added successfully",
+            id: result.insertId
+          });
+        }
+      );
+    }
+  );
+});
+
+// Update category
+app.put("/categories/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  if (!name || !name.trim()) {
+    return res.status(400).json({ 
+      success: false, 
+      error: "Category name is required" 
+    });
+  }
+
+  const trimmedName = name.trim();
+
+  // Check if another category with the same name exists
+  db.query(
+    "SELECT * FROM categories WHERE LOWER(name) = LOWER(?) AND id != ?",
+    [trimmedName, id],
+    (err, results) => {
+      if (err) {
+        console.error("Error checking category:", err);
+        return res.status(500).json({ 
+          success: false, 
+          error: "Database error" 
+        });
+      }
+
+      if (results.length > 0) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Category name already exists" 
+        });
+      }
+
+      // Update category
+      db.query(
+        "UPDATE categories SET name = ? WHERE id = ?",
+        [trimmedName, id],
+        (err, result) => {
+          if (err) {
+            console.error("Error updating category:", err);
+            return res.status(500).json({ 
+              success: false, 
+              error: "Failed to update category" 
+            });
+          }
+
+          if (result.affectedRows === 0) {
+            return res.status(404).json({ 
+              success: false, 
+              error: "Category not found" 
+            });
+          }
+
+          res.json({ 
+            success: true, 
+            message: "Category updated successfully" 
+          });
+        }
+      );
+    }
+  );
+});
+
+// Delete category
+app.delete("/categories/:id", (req, res) => {
+  const { id } = req.params;
+
+  // Check if any products use this category
+  db.query(
+    "SELECT COUNT(*) as count FROM product WHERE category = (SELECT name FROM categories WHERE id = ?)",
+    [id],
+    (err, results) => {
+      if (err) {
+        console.error("Error checking products:", err);
+        return res.status(500).json({ 
+          success: false, 
+          error: "Database error" 
+        });
+      }
+
+      if (results[0].count > 0) {
+        return res.status(400).json({ 
+          success: false, 
+          error: `Cannot delete category. ${results[0].count} product(s) are using this category.` 
+        });
+      }
+
+      // Delete category
+      db.query(
+        "DELETE FROM categories WHERE id = ?",
+        [id],
+        (err, result) => {
+          if (err) {
+            console.error("Error deleting category:", err);
+            return res.status(500).json({ 
+              success: false, 
+              error: "Failed to delete category" 
+            });
+          }
+
+          if (result.affectedRows === 0) {
+            return res.status(404).json({ 
+              success: false, 
+              error: "Category not found" 
+            });
+          }
+
+          res.json({ 
+            success: true, 
+            message: "Category deleted successfully" 
+          });
+        }
+      );
+    }
+  );
+});
+
 // ✅ FIXED Add product endpoint
 app.post("/addproduct", (req, res) => {
   console.log("📦 Received addproduct request:", req.body);

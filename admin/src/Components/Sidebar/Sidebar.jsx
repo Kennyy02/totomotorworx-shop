@@ -23,6 +23,12 @@ const Sidebar = () => {
           <p>Add Products</p>
         </div>
       </Link>
+      <li onClick={() => { setMenu("categories") }}>
+      <Link style={{ textDecoration: 'none' }} to='/admin/categories'>
+          📂 Category Management
+      </Link>
+          {menu === "categories" ? <hr /> : <></>}
+      </li>
       <Link to={'/listproduct'} style={{textDecoration:"none"}}>
         <div className={`sidebar-item ${location.pathname === '/listproduct' ? 'active' : ''}`}>
           <img src={list_product_icon} alt="" />
