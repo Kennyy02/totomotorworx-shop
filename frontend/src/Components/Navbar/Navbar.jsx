@@ -23,11 +23,16 @@ const Navbar = () => {
       const response = await fetch('https://totomotorworx-shop-production.up.railway.app/categories');
       const data = await response.json();
       
-      // Transform categories to match navbar format
-      const formattedCategories = data.map(cat => ({
-        name: cat.name,
-        path: `/products/${cat.name.toLowerCase().replace(/\s+/g, '-')}`
-      }));
+      // ✅ FIXED: Use the exact category name from database for the path
+      const formattedCategories = data.map(cat => {
+        // Get the actual category value from your products (singular form)
+        const categoryPath = cat.name.toLowerCase().replace(/\s+/g, '-');
+        
+        return {
+          name: cat.name, // Display name (can be plural like "Grips")
+          path: `/products/${categoryPath}` // URL path matches DB exactly
+        };
+      });
       
       setProductCategories(formattedCategories);
     } catch (error) {
@@ -36,7 +41,10 @@ const Navbar = () => {
       setProductCategories([
         { name: "Tires", path: "/products/tires" },
         { name: "Grips", path: "/products/grip" },
-        { name: "Motor Oil", path: "/products/motor-oil" }
+        { name: "Motor Oil", path: "/products/motor-oil" },
+        { name: "Helmets", path: "/products/helmet" },
+        { name: "Spray Paint", path: "/products/spray-paint" },
+        { name: "Cables", path: "/products/cable" }
       ]);
     }
   };
