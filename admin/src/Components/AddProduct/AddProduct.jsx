@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './AddProduct.css'
 
 // Upload Icon Component
@@ -26,15 +26,42 @@ const UploadIcon = () => (
 );
 
 const AddProduct = () => {
-
     const [image, setImage] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [loadingCategories, setLoadingCategories] = useState(true);
     const [productDetails, setProductDetails] = useState({
         name: "",
         image: "",
-        category: "tires", // Default category
+        category: "", // Will be set after categories load
         new_price: "",
         old_price: "",
     });
+
+    // ✅ Fetch categories from database on mount
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch('https://totomotorworx-shop-production.up.railway.app/categories');
+            const data = await response.json();
+            
+            console.log('📦 Fetched categories:', data);
+            setCategories(data);
+            
+            // Set default category to first one
+            if (data.length > 0 && !productDetails.category) {
+                setProductDetails(prev => ({ ...prev, category: data[0].name }));
+            }
+            
+            setLoadingCategories(false);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+            setLoadingCategories(false);
+            alert('Failed to load categories. Please refresh the page.');
+        }
+    };
 
     const imageHandler = (e) => {
         setImage(e.target.files[0]);
@@ -48,7 +75,7 @@ const AddProduct = () => {
         // --- 1. Client-Side Validation ---
         if (!productDetails.name || !image || !productDetails.category || !productDetails.new_price || !productDetails.old_price) {
             alert("Please fill out all the fields and upload an image.");
-            return; // Stop the function if validation fails
+            return;
         }
         
         let responseData;
@@ -70,10 +97,12 @@ const AddProduct = () => {
 
             if (!responseData.success) {
                 alert("Image upload failed. Please try again.");
-                return; // Stop if image upload fails
+                return;
             }
 
             product.image = responseData.image_url;
+
+            console.log('📤 Sending product to backend:', product);
 
             // --- 3. Add Product to Database ---
             const addProductResponse = await fetch('https://totomotorworx-shop-production.up.railway.app/addproduct', {
@@ -93,13 +122,12 @@ const AddProduct = () => {
                 setProductDetails({
                     name: "",
                     image: "",
-                    category: "tires",
+                    category: categories.length > 0 ? categories[0].name : "",
                     new_price: "",
                     old_price: "",
                 });
                 setImage(false);
             } else {
-                // Display the specific error message from the backend
                 alert(`Failed to add product: ${addProductData.error || 'Unknown error'}`);
             }
 
@@ -121,21 +149,32 @@ const AddProduct = () => {
                     <input value={productDetails.old_price} onChange={changeHandler} type="text" name='old_price' placeholder='Type here' />
                 </div>
                 <div className="addproduct-itemfield">
-                    <p> Offer Price</p>
+                    <p>Offer Price</p>
                     <input value={productDetails.new_price} onChange={changeHandler} type="text" name='new_price' placeholder='Type here' />
                 </div>
             </div>
             <div className="addproduct-itemfield">
                 <p>Category</p>
-                <select value={productDetails.category} onChange={changeHandler} name="category" className='add-product-selector'>
-                    <option value="tires">Tires</option>
-                    <option value="grip">Grips</option>
-                    <option value="motor-oil">Motor Oil</option>
-                    <option value="helmet">Helmets</option>
-                    <option value="spray-paint">Spray Paint</option>
-                    <option value="cable">Cable</option>
-                    <option value="service">Service</option>
-                </select>
+                {loadingCategories ? (
+                    <div style={{ padding: '14px', color: '#999' }}>Loading categories...</div>
+                ) : categories.length === 0 ? (
+                    <div style={{ padding: '14px', color: '#e74c3c' }}>
+                        No categories available. Please add categories first in Category Management.
+                    </div>
+                ) : (
+                    <select 
+                        value={productDetails.category} 
+                        onChange={changeHandler} 
+                        name="category" 
+                        className='add-product-selector'
+                    >
+                        {categories.map((cat) => (
+                            <option key={cat.id} value={cat.name}>
+                                {cat.name}
+                            </option>
+                        ))}
+                    </select>
+                )}
             </div>
             <div className="addproduct-itemfield">
                 <label htmlFor="file-input">
@@ -147,7 +186,13 @@ const AddProduct = () => {
                 </label>
                 <input onChange={imageHandler} type="file" name='image' id='file-input' hidden />
             </div>
-            <button onClick={() => { Add_Product() }} className='addproduct-btn'>ADD</button>
+            <button 
+                onClick={() => { Add_Product() }} 
+                className='addproduct-btn'
+                disabled={loadingCategories || categories.length === 0}
+            >
+                ADD
+            </button>
         </div>
     );
 };
