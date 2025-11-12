@@ -13,16 +13,15 @@ const DynamicCategory = () => {
   const { category } = useParams();
   
   // Map URL categories to their banners
+  // Using SINGULAR forms to match database
   const bannerMap = {
     'tires': tire_banner,
-    'grips': grip_banner,
-    'grip': grip_banner,
+    'grip': grip_banner,           // Singular to match DB
     'motor-oil': motor_oil,
-    'helmet': helmet_banner,
-    'spray-paint': spray_paint,
-    'spray-paints': spray_paint,
-    'cable': cable_banner,
-    'mirror': new_banner, // Add default banner for new categories
+    'helmet': helmet_banner,       // Singular to match DB
+    'spray-paint': spray_paint,    // Singular to match DB
+    'cable': cable_banner,         // Singular to match DB
+    'mirror': new_banner,
     'service': new_banner,
   };
 
