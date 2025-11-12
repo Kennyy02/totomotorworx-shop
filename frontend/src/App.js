@@ -24,7 +24,7 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/products' element={<HomeCategory banner={new_banner} category="product"/>}/>
         <Route path='/products/tires' element={<HomeCategory banner={tire_banner} category="tires"/>}/>
-        <Route path='/products/grip' element={<HomeCategory banner={grip_banner} category="grip"/>}/>
+        <Route path="/products/grips" element={<HomeCategory category="grips" banner={grips_banner} />} />
         <Route path='/products/motor-oil' element={<HomeCategory banner={motor_oil} category="motor-oil"/>}/>
         <Route path='/products/helmet' element={<HomeCategory banner={helmet_banner} category="helmet"/>}/>
         <Route path='/products/spray-paint' element={<HomeCategory banner={spray_paint} category="spray-paint"/>}/>
