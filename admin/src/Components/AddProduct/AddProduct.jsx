@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './AddProduct.css'
+import '../AdminTheme.css';
 
 // Upload Icon Component
 const UploadIcon = () => (
