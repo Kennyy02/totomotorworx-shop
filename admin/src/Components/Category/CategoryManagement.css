@@ -269,11 +269,12 @@
   box-shadow: var(--shadow-card);
 }
 
-/* Categories Grid */
+/* Categories Grid - Fixed 3 Column Layout */
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  width: 100%;
 }
 
 /* ============================================
@@ -459,6 +460,12 @@
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
+
+@media (max-width: 1200px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media (max-width: 768px) {
   .category-container {
