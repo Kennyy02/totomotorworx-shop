@@ -198,6 +198,80 @@
   animation: bounce 0.5s ease-in-out;
 }
 
+/* Dropdown Container */
+.dropdown-container {
+  position: relative;
+}
+
+/* Dropdown Content - Hidden by default */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000;
+  border-radius: 8px;
+  padding: 8px 0;
+  margin-top: 8px; /* ✅ Add gap so mouse can reach dropdown */
+}
+
+/* Show dropdown on hover - with larger hover area */
+.dropdown-container:hover .dropdown-content {
+  display: block;
+}
+
+/* Add invisible bridge between nav item and dropdown */
+.dropdown-container::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 8px; /* Matches margin-top of dropdown-content */
+  background: transparent;
+}
+
+/* Dropdown Links */
+.dropdown-content a {
+  color: #474747;
+  padding: 12px 20px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.3s ease;
+  font-size: 15px;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+  color: #6079ff;
+}
+
+/* Keep dropdown open when hovering over it */
+.dropdown-content:hover {
+  display: block;
+}
+
+/* Optional: Add a little arrow pointing up */
+.dropdown-content::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+}
+
+/* Make sure parent stays highlighted when dropdown is open */
+.dropdown-container:hover > a {
+  color: #6079ff;
+}
+
 @keyframes bounce {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }

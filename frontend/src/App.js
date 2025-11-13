@@ -6,7 +6,8 @@ import HomeCategory from './Pages/HomeCategory';
 import Product from './Pages/Product';
 import Cart from './Pages/Cart';
 import LoginSignup from './Pages/LoginSignup';
-import DynamicCategory from './Pages/DynamicCategory'; // ✅ NEW
+import DynamicCategory from './Pages/DynamicCategory';
+import AllProducts from './Pages/AllProducts'; // ✅ NEW: Create this component
 import new_banner from './Components/Assets/banner.png'
 import services from './Components/Assets/service_banner.jpeg'
 
@@ -17,9 +18,11 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path='/' element={<Home/>}/>
-          <Route path='/products' element={<HomeCategory banner={new_banner} category="product"/>}/>
           
-          {/* ✅ Dynamic route handles ALL product categories automatically */}
+          {/* ✅ FIXED: Show ALL products when clicking "Products" */}
+          <Route path='/products' element={<AllProducts banner={new_banner} />}/>
+          
+          {/* ✅ Dynamic route handles specific categories */}
           <Route path='/products/:category' element={<DynamicCategory />}/>
           
           <Route path='/services' element={<HomeCategory banner={services} category="service"/>}/>
