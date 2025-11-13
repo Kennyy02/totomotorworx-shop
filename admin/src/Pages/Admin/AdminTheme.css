@@ -1,0 +1,341 @@
+/* ============================================
+   UNIFIED ADMIN THEME - Purple Gradient Design
+   Add this to the TOP of: AddProduct.css, Dashboard.css, 
+   Inventory.css, ListProduct.css, UserManagement.css, CartAnalytics.css
+   ============================================ */
+
+:root {
+  --primary: #8b5cf6;
+  --primary-dark: #7c3aed;
+  --primary-light: #a78bfa;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --bg-gradient: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 50%, #ddd6fe 100%);
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+  --shadow-card: 0 4px 6px -1px rgba(139, 92, 246, 0.1), 0 2px 4px -1px rgba(139, 92, 246, 0.06);
+  --shadow-hover: 0 10px 15px -3px rgba(139, 92, 246, 0.2), 0 4px 6px -2px rgba(139, 92, 246, 0.1);
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   SHARED CONTAINER STYLES
+   ============================================ */
+
+.add-product,
+.list-product,
+.inventory-container,
+.user-management-container,
+.analytics-wrapper,
+.dashboard-container {
+  background: var(--bg-gradient) !important;
+  min-height: 100vh;
+  padding: 2.5rem 3rem !important;
+  box-sizing: border-box;
+}
+
+/* White content cards */
+.add-product > *:not(::before),
+.list-product > *:not(::before),
+.inventory-container > *:not(::before),
+.user-management-container > *:not(::before) {
+  position: relative;
+}
+
+/* Content wrapper for cards */
+.add-product,
+.analytics-wrapper {
+  max-width: 900px;
+  background: var(--card-bg) !important;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  margin: 2.5rem auto;
+}
+
+.list-product,
+.inventory-container,
+.user-management-container {
+  width: 100%;
+  max-width: none;
+  background: var(--bg-gradient) !important;
+}
+
+/* ============================================
+   GRADIENT TOP BORDER
+   ============================================ */
+
+.add-product::before,
+.list-product::before,
+.inventory-container::before,
+.user-management-container::before,
+.analytics-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 50%, #c4b5fd 100%);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* ============================================
+   BUTTONS - UNIFIED STYLE
+   ============================================ */
+
+.addproduct-btn,
+.save-btn,
+.pagination button,
+.pagination-controls button {
+  background: var(--primary) !important;
+  color: white !important;
+  border: 2px solid var(--primary) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: var(--transition) !important;
+  box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.3) !important;
+}
+
+.addproduct-btn:hover,
+.save-btn:hover,
+.pagination button:hover:not(:disabled),
+.pagination-controls button:hover:not(:disabled) {
+  background: var(--primary-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.4) !important;
+}
+
+.pagination button.active,
+.pagination-controls button.active {
+  background: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+/* ============================================
+   INPUT FIELDS - UNIFIED STYLE
+   ============================================ */
+
+.addproduct-itemfield input,
+.add-product-selector,
+.category-input,
+.inventory-table input[type="text"],
+.user-table input {
+  border: 2px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.875rem 1.25rem !important;
+  background: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  transition: var(--transition) !important;
+  font-size: 0.9375rem !important;
+}
+
+.addproduct-itemfield input:focus,
+.add-product-selector:focus,
+.category-input:focus,
+.inventory-table input:focus,
+.user-table input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+  outline: none !important;
+}
+
+/* ============================================
+   TABLES - WHITE CARDS ON GRADIENT
+   ============================================ */
+
+.listproduct-format,
+.inventory-table tbody tr,
+.user-table tbody tr {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-card) !important;
+  margin-bottom: 1rem !important;
+  transition: var(--transition) !important;
+}
+
+.listproduct-format:hover,
+.inventory-table tbody tr:hover,
+.user-table tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover) !important;
+}
+
+/* Table headers */
+.listproduct-format-main,
+.inventory-table thead,
+.user-table thead {
+  background: var(--card-bg) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* ============================================
+   STATS CARDS - GRADIENT ICONS
+   ============================================ */
+
+.stat-card {
+  background: var(--card-bg) !important;
+  border: none !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 50%, #c4b5fd 100%);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover) !important;
+}
+
+/* ============================================
+   ACTION CARDS
+   ============================================ */
+
+.action-card {
+  background: var(--card-bg) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: var(--transition) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.action-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover) !important;
+}
+
+.action-card:hover::before {
+  opacity: 1;
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+
+.alert {
+  background: var(--card-bg) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-card) !important;
+  border-left: 4px solid !important;
+}
+
+.alert-warning {
+  border-left-color: var(--warning) !important;
+}
+
+.alert-success {
+  border-left-color: var(--success) !important;
+}
+
+.alert-info {
+  border-left-color: var(--primary) !important;
+}
+
+/* ============================================
+   USER MANAGEMENT BUTTONS
+   ============================================ */
+
+.edit-btn,
+.disable-button,
+.enable-button {
+  border: 2px solid !important;
+  background: transparent !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.625rem 1rem !important;
+  font-weight: 600 !important;
+  transition: var(--transition) !important;
+}
+
+.edit-btn {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+.edit-btn:hover {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+.disable-button {
+  border-color: var(--error) !important;
+  color: var(--error) !important;
+}
+
+.disable-button:hover {
+  background: var(--error) !important;
+  color: white !important;
+}
+
+.enable-button {
+  border-color: var(--success) !important;
+  color: var(--success) !important;
+}
+
+.enable-button:hover {
+  background: var(--success) !important;
+  color: white !important;
+}
+
+/* ============================================
+   HEADINGS
+   ============================================ */
+
+h1, h2, h3, h4 {
+  color: var(--text-primary) !important;
+}
+
+.dashboard-header h1 {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .add-product,
+  .list-product,
+  .inventory-container,
+  .user-management-container,
+  .analytics-wrapper,
+  .dashboard-container {
+    padding: 1.5rem 1rem !important;
+  }
+}

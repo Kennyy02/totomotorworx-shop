@@ -1,5 +1,6 @@
 import React from 'react';
 import './Admin.css';
+import './AdminTheme.css';
 import Sidebar from '../../Components/Sidebar/Sidebar';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from '../../Components/Dashboard/Dashboard';
