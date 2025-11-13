@@ -11,7 +11,7 @@ import {
   Cell
 } from "recharts";
 import "./CartAnalytics.css";
-import '../AdminTheme.css';
+import '../../Pages/Admin/AdminTheme.css';
 
 const COLORS = ['#4f46e5', '#7c3aed', '#ec4899', '#f59e0b', '#10b981', '#06b6d4', '#ef4444', '#8b5cf6'];
 
