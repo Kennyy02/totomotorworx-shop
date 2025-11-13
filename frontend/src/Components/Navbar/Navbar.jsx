@@ -23,16 +23,17 @@ const Navbar = () => {
       const response = await fetch('https://totomotorworx-shop-production.up.railway.app/categories');
       const data = await response.json();
       
-      // ✅ FIXED: Use the exact category name from database for the path
-      const formattedCategories = data.map(cat => {
-        // Get the actual category value from your products (singular form)
+       // ✅ FIXED: Filter out "service" and format the rest
+    const formattedCategories = data
+      .filter(cat => cat.name.toLowerCase() !== 'service') // ADD THIS LINE
+      .map(cat => {
         const categoryPath = cat.name.toLowerCase().replace(/\s+/g, '-');
         
         return {
-          name: cat.name, // Display name (can be plural like "Grips")
-          path: `/products/${categoryPath}` // URL path matches DB exactly
+          name: cat.name,
+          path: `/products/${categoryPath}`
         };
-      });
+      })
       
       setProductCategories(formattedCategories);
     } catch (error) {
