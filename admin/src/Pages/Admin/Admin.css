@@ -1,6 +1,22 @@
-.admin{
+/* Admin Dashboard Layout */
+.admin {
     display: flex;
+    min-height: 100vh;
+    width: 100%;
 }
+
+/* Sidebar stays fixed width */
+.sidebar {
+    flex-shrink: 0;
+}
+
+/* Main content area takes full remaining width */
+.admin > * {
+    flex: 1;
+    width: 100%;
+    max-width: 100%;
+}
+
 @media(max-width:800px){
     .admin{
         flex-direction: column;
