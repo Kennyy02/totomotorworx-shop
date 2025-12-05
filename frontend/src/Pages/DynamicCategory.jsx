@@ -20,10 +20,14 @@ const DynamicCategory = () => {
     'motor-oil': motor_oil,
     'helmet': helmet_banner,       // Singular to match DB
     'spray-paint': spray_paint,    // Singular to match DB
+    'spray-paint': spray_paints, 
     'cable': cable_banner,         // Singular to match DB
     'mirror': new_banner,
     'service': new_banner,
   };
+
+  // Get banner or use default
+  const banner = bannerMap[category.toLowerCase()] || new_banner;
 
   return <HomeCategory banner={banner} category={category} />;
 };
