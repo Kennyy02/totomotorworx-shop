@@ -50,12 +50,7 @@ const HomeCategory = (props) => {
 
         {/* Display message if no products found */}
         {filteredProducts.length === 0 && (
-          <div className="no-products" style={{
-            textAlign: 'center',
-            padding: '60px 20px',
-            color: '#888',
-            fontSize: '18px'
-          }}>
+          <div className="no-products">
             <h2>No products found in "{props.category}" category</h2>
             <p>Please check back later or browse other categories.</p>
           </div>

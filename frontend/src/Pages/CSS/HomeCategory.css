@@ -49,6 +49,31 @@
   border-radius: 8px;
 }
 
+/* --- No Products Message (Centered) --- */
+.no-products {
+  grid-column: 1 / -1; /* Spans full width of grid */
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.no-products h2 {
+  font-size: 28px;
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.no-products p {
+  font-size: 16px;
+  color: #888;
+}
+
 /* --- Services Header (Full width banner style) --- */
 .services-header {
   grid-column: 1 / -1; /* Spans full width */
@@ -165,6 +190,14 @@
   .services-header p {
     font-size: 15px;
   }
+  
+  .no-products h2 {
+    font-size: 24px;
+  }
+  
+  .no-products p {
+    font-size: 15px;
+  }
 }
 
 /* Mobile landscape and small tablets (768px and below) */
@@ -228,6 +261,19 @@
     height: 50px;
     font-size: 16px;
   }
+  
+  .no-products {
+    min-height: 200px;
+    padding: 40px 15px;
+  }
+  
+  .no-products h2 {
+    font-size: 20px;
+  }
+  
+  .no-products p {
+    font-size: 14px;
+  }
 }
 
 /* Very small mobile (400px and below) */
@@ -244,5 +290,13 @@
   
   .services-header p {
     font-size: 12px;
+  }
+  
+  .no-products h2 {
+    font-size: 18px;
+  }
+  
+  .no-products p {
+    font-size: 13px;
   }
 }
