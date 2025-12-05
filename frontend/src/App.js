@@ -9,8 +9,8 @@ import LoginSignup from './Pages/LoginSignup';
 import DynamicCategory from './Pages/DynamicCategory';
 import AllProducts from './Pages/AllProducts'; 
 import services from './Components/Assets/service_banner.jpeg';
-import helmetBanner from './Components/Assets/helmet_banner.jpg';
-import sprayPaintBanner from './Components/Assets/spray_paint.jpg';
+import helmetBanner from "./Components/Assets/helmet_banner.jpg";
+import sprayPaintBanner from "./Components/Assets/spray_paint.jpg";
 
 function App() {
   return (
