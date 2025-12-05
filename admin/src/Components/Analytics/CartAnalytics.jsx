@@ -73,6 +73,35 @@ const CartAnalytics = () => {
         <p className="loading-text">Loading analytics...</p>
       ) : analyticsData.length > 0 ? (
         <>
+        <ResponsiveContainer width="100%" height={400}>
+            <BarChart
+              data={analyticsData}
+              margin={{ top: 20, right: 30, left: 10, bottom: 80 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis 
+                dataKey="name" 
+                angle={-45}
+                textAnchor="end"
+                height={100}
+                interval={0}
+                tick={{ fontSize: 11 }}
+              />
+              <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+              <Bar dataKey="addedCount" name="Added to Cart Count" radius={[8, 8, 0, 0]}>
+                {analyticsData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+
+          {lastUpdated && (
+            <p className="last-updated">Last updated: {lastUpdated}</p>
+          )}
+          
           <div className="analytics-table">
             <table>
               <thead>
@@ -101,34 +130,6 @@ const CartAnalytics = () => {
             </table>
           </div>
 
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              data={analyticsData}
-              margin={{ top: 20, right: 30, left: 10, bottom: 80 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis 
-                dataKey="name" 
-                angle={-45}
-                textAnchor="end"
-                height={100}
-                interval={0}
-                tick={{ fontSize: 11 }}
-              />
-              <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="addedCount" name="Added to Cart Count" radius={[8, 8, 0, 0]}>
-                {analyticsData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-
-          {lastUpdated && (
-            <p className="last-updated">Last updated: {lastUpdated}</p>
-          )}
         </>
       ) : (
         <p className="empty-state">
