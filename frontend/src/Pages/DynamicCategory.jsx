@@ -16,9 +16,9 @@ const DynamicCategory = () => {
   // Using SINGULAR forms to match database
   const bannerMap = {
     'tires': tire_banner,
-    'grip': grip_banner,           // Singular to match DB
+    'grips': grip_banner,           // Singular to match DB
     'motor-oil': motor_oil,
-    'helmet': helmet_banner,       // Singular to match DB
+    'helmets': helmet_banner,       // Singular to match DB
     'spray-paint': spray_paint,    // Singular to match DB
     'spray-paints': spray_paint, 
     'cable': cable_banner,         // Singular to match DB
