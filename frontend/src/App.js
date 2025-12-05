@@ -7,8 +7,7 @@ import Product from './Pages/Product';
 import Cart from './Pages/Cart';
 import LoginSignup from './Pages/LoginSignup';
 import DynamicCategory from './Pages/DynamicCategory';
-import AllProducts from './Pages/AllProducts'; // ✅ NEW: Create this component
-import new_banner from './Components/Assets/banner.png'
+import AllProducts from './Pages/AllProducts'; 
 import services from './Components/Assets/service_banner.jpeg'
 
 function App() {
