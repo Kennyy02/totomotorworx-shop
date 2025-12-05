@@ -20,6 +20,8 @@
 
 .nav-logo img {
   width: 350px;
+  height: auto;
+  object-fit: contain;
   filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.3));
   transition: filter 0.3s ease;
 }
@@ -48,9 +50,8 @@
   padding: 0;
 }
 
-/* ✅ CRITICAL FIX: Position relative for li and consistent padding */
 .nav-menu > li {
-  position: relative; /* Makes hr position relative to this element */
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -58,7 +59,7 @@
   gap: 2px;
   cursor: pointer;
   transition: color 0.3s ease;
-  padding: 10px 0; /* ✅ Consistent padding keeps all items same height */
+  padding: 10px 0;
 }
 
 .nav-menu > li:hover {
@@ -70,9 +71,8 @@
   color: inherit;
 }
 
-/* ✅ CRITICAL FIX: Absolute positioning for hr */
 .nav-menu hr {
-  position: absolute; /* ✅ Takes hr out of document flow */
+  position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
@@ -124,7 +124,6 @@
   color: #ffffff;
 }
 
-/* Show dropdown on hover */
 .dropdown-container:hover .dropdown-content {
   display: block;
   opacity: 1;
@@ -133,6 +132,28 @@
 
 .dropdown-container:hover > a {
   color: #ff6b6b;
+}
+
+.dropdown-container::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: transparent;
+}
+
+.dropdown-content::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
 }
 
 /* --- Login/Cart Section --- */
@@ -197,80 +218,6 @@
   animation: bounce 0.5s ease-in-out;
 }
 
-/* Dropdown Container */
-.dropdown-container {
-  position: relative;
-}
-
-/* Dropdown Content - Hidden by default */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: white;
-  min-width: 200px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1000;
-  border-radius: 8px;
-  padding: 8px 0;
-  margin-top: 8px; /* ✅ Add gap so mouse can reach dropdown */
-}
-
-/* Show dropdown on hover - with larger hover area */
-.dropdown-container:hover .dropdown-content {
-  display: block;
-}
-
-/* Add invisible bridge between nav item and dropdown */
-.dropdown-container::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: 8px; /* Matches margin-top of dropdown-content */
-  background: transparent;
-}
-
-/* Dropdown Links */
-.dropdown-content a {
-  color: #474747;
-  padding: 12px 20px;
-  text-decoration: none;
-  display: block;
-  transition: background-color 0.3s ease;
-  font-size: 15px;
-}
-
-.dropdown-content a:hover {
-  background-color: #f1f1f1;
-  color: #6079ff;
-}
-
-/* Keep dropdown open when hovering over it */
-.dropdown-content:hover {
-  display: block;
-}
-
-/* Optional: Add a little arrow pointing up */
-.dropdown-content::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  left: 20px;
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid white;
-}
-
-/* Make sure parent stays highlighted when dropdown is open */
-.dropdown-container:hover > a {
-  color: #6079ff;
-}
-
 @keyframes bounce {
   0% { transform: scale(1); }
   50% { transform: scale(1.2); }
@@ -279,75 +226,178 @@
 
 /* --- Media Queries --- */
 @media (max-width: 1280px) {
-  .navbar { padding: 12px 50px; }
-  .nav-logo img { width: 50px; height: 50px; }
-  .nav-logo p { font-size: 25px; }
-  .nav-menu { gap: 30px; font-size: 16px; }
-  .nav-login-cart { gap: 30px; }
-  .nav-login-cart button { width: 120px; height: 45px; font-size: 16px; }
-  .nav-cart-count { margin-left: -100px; font-size: 12px; }
+  .navbar { padding: 15px 40px; }
+  .nav-logo img { width: 280px; }
+  .nav-logo p { font-size: 30px; }
+  .nav-menu { gap: 25px; font-size: 18px; }
+  .nav-login-cart { gap: 18px; }
+  .nav-login-cart img { height: 80px; width: 80px; }
+  .nav-login-cart button { width: 100px; height: 40px; font-size: 15px; }
+  .nav-cart-count { margin-left: -85px; font-size: 13px; }
 }
 
 @media (max-width: 1024px) {
   .navbar { padding: 12px 30px; }
-  .nav-menu { gap: 25px; font-size: 14px; }
-  .nav-login-cart button { width: 80px; height: 35px; font-size: 14px; }
-  .nav-login-cart img { width: 60px; }
-  .nav-cart-count { width: 18px; height: 18px; margin-left: -90px; }
+  .nav-logo img { width: 220px; }
+  .nav-logo p { font-size: 24px; }
+  .nav-menu { gap: 20px; font-size: 16px; }
+  .nav-login-cart img { height: 70px; width: 70px; }
+  .nav-login-cart button { width: 90px; height: 36px; font-size: 14px; }
+  .nav-cart-count { width: 24px; height: 18px; margin-left: -75px; font-size: 12px; }
 }
 
 @media (max-width: 800px) {
   .navbar {
-    padding: 10px 20px;
+    padding: 12px 20px;
     flex-wrap: wrap;
     justify-content: space-between;
   }
+  
+  .nav-logo img { 
+    width: 180px;
+    max-height: 50px;
+  }
+  
   .nav-menu {
     flex-direction: row;
     justify-content: center;
     gap: 15px;
     width: 100%;
     margin-top: 10px;
+    font-size: 14px;
   }
+  
   .nav-menu li {
-    font-size: 12px;
     padding: 8px 0;
   }
+  
   .nav-login-cart {
-    gap: 10px;
+    gap: 12px;
   }
-  .nav-login-cart button {
+  
+  .nav-login-cart img {
+    height: 60px;
     width: 60px;
-    height: 25px;
-    font-size: 12px;
   }
+  
+  .nav-login-cart button {
+    width: 70px;
+    height: 32px;
+    font-size: 13px;
+  }
+  
   .nav-cart-count {
-    transform: scale(0.8);
-    margin-top: -25px;
-    margin-left: -80px;
+    width: 22px;
+    height: 16px;
+    margin-top: -30px;
+    margin-left: -65px;
+    font-size: 11px;
   }
 }
 
 @media (max-width: 500px) {
   .navbar {
-    padding: 8px 15px;
+    padding: 10px 15px;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
   }
+  
   .nav-logo {
-    transform: scale(0.8);
+    width: 100%;
+    justify-content: center;
   }
+  
+  /* ✅ CRITICAL FIX: Proper mobile logo sizing */
+  .nav-logo img { 
+    width: 160px;
+    max-width: 160px;
+    height: auto;
+    max-height: 45px;
+    object-fit: contain;
+  }
+  
+  .nav-logo p {
+    display: none; /* Hide text on very small screens */
+  }
+  
   .nav-menu {
     width: 100%;
     justify-content: space-around;
-    gap: 5px;
+    gap: 8px;
     flex-wrap: wrap;
+    font-size: 12px;
+    padding: 0 5px;
   }
+  
   .nav-menu li {
-    padding: 6px 0;
+    padding: 6px 8px;
+    font-size: 11px;
   }
+  
   .nav-login-cart {
-    transform: scale(0.8);
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .nav-login-cart img {
+    height: 50px;
+    width: 50px;
+  }
+  
+  .nav-login-cart button {
+    width: 65px;
+    height: 28px;
+    font-size: 12px;
+  }
+  
+  .nav-cart-count {
+    width: 20px;
+    height: 16px;
+    margin-top: -25px;
+    margin-left: -55px;
+    font-size: 10px;
+  }
+}
+
+/* ✅ Extra small devices (very small phones) */
+@media (max-width: 375px) {
+  .navbar {
+    padding: 8px 10px;
+  }
+  
+  .nav-logo img {
+    width: 140px;
+    max-width: 140px;
+    max-height: 40px;
+  }
+  
+  .nav-menu {
+    font-size: 11px;
+    gap: 6px;
+  }
+  
+  .nav-menu li {
+    padding: 5px 6px;
+    font-size: 10px;
+  }
+  
+  .nav-login-cart img {
+    height: 45px;
+    width: 45px;
+  }
+  
+  .nav-login-cart button {
+    width: 60px;
+    height: 26px;
+    font-size: 11px;
+  }
+  
+  .nav-cart-count {
+    width: 18px;
+    height: 14px;
+    margin-top: -23px;
+    margin-left: -50px;
+    font-size: 9px;
   }
 }
