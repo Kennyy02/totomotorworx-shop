@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import './AddProduct.css'
+import './AddProduct.css';
 import '../../Pages/Admin/AdminTheme.css';
 
 // Upload Icon Component
