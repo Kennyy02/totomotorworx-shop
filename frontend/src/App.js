@@ -11,6 +11,7 @@ import AllProducts from './Pages/AllProducts';
 import services from './Components/Assets/service_banner.jpeg';
 import helmetBanner from "./Components/Assets/helmet_banner.jpg";
 import sprayPaintBanner from "./Components/Assets/spray_paint.jpg";
+import allProductsBanner from "./Components/Assets/all_products_banner.png";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
           <Route path='/' element={<Home/>}/>
           
           {/* ✅ FIXED: Show ALL products when clicking "Products" - NO BANNER */}
-          <Route path='/products' element={<AllProducts />}/>
+          <Route path='/products' element={<AllProducts banner={allProductsBanner}/>}/>
           
           {/* ✅ Dynamic route handles specific categories */}
           <Route path='/products/:category' element={<DynamicCategory />}/>

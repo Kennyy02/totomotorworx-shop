@@ -19,11 +19,14 @@ const AllProducts = (props) => {
 
   return (
     <div className="home-category">
-      <img
-        className="homecategory-banner"
-        src={props.banner}
-        alt="All Products"
-      />
+      {/* ✅ Show banner if provided */}
+      {props.banner && (
+        <img
+          className="homecategory-banner"
+          src={props.banner}
+          alt="All Products"
+        />
+      )}
 
       <div className="homecategory-products">
         <div className="services-header">
