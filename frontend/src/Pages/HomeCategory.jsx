@@ -30,11 +30,14 @@ const HomeCategory = (props) => {
 
   return (
     <div className="home-category">
-      <img
-        className="homecategory-banner"
-        src={props.banner}
-        alt={props.category}
-      />
+      {/* Only show banner if it exists AND is passed as a prop */}
+      {props.banner && (
+        <img
+          className="homecategory-banner"
+          src={props.banner}
+          alt={props.category}
+        />
+      )}
 
       <div className="homecategory-products">
         {/* Add header for services page */}
