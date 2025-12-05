@@ -25,7 +25,7 @@ const Navbar = () => {
       
        // ✅ FIXED: Filter out "service" and format the rest
     const formattedCategories = data
-      .filter(cat => cat.name.toLowerCase() !== 'service') // ADD THIS LINE
+      .filter(cat => cat.name.toLowerCase() !== 'service') 
       .map(cat => {
         const categoryPath = cat.name.toLowerCase().replace(/\s+/g, '-');
         
@@ -88,10 +88,6 @@ const Navbar = () => {
         <li onClick={() => { setMenu("services") }}>
           <Link style={{ textDecoration: 'none' }} to='/services'>Services</Link>
           {menu === "services" ? <hr /> : <></>}
-        </li>
-        <li onClick={() => { setMenu("abouts") }}>
-          <Link style={{ textDecoration: 'none' }} to='/abouts'>About</Link>
-          {menu === "abouts" ? <hr /> : <></>}
         </li>
       </ul>
       <div className="nav-login-cart">
