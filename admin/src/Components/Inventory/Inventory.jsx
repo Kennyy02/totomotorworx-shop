@@ -58,6 +58,21 @@ const Inventory = () => {
     }
   };
 
+  // Check if stock has been modified
+  const isStockModified = (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (!product) return false;
+    
+    // If no edit has been made, button should be disabled
+    if (editStock[productId] === undefined) return false;
+    
+    // Compare current input value with original stock
+    const currentInputValue = editStock[productId] === '' ? 0 : Number(editStock[productId]);
+    const originalStock = product.stock;
+    
+    return currentInputValue !== originalStock;
+  };
+
   const handleSave = async (id) => {
     const productToSave = products.find(p => p.id === id);
     const initialProductStock = productToSave ? productToSave.stock : 0;
@@ -168,7 +183,7 @@ const Inventory = () => {
                   <button
                     onClick={() => handleSave(product.id)}
                     className="save-btn"
-                    disabled={savingId === product.id}
+                    disabled={savingId === product.id || !isStockModified(product.id)}
                   >
                     {savingId === product.id ? 'Saving...' : 'Save Stock'}
                   </button>
