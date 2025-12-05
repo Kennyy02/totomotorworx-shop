@@ -25,9 +25,6 @@ const DynamicCategory = () => {
     'service': new_banner,
   };
 
-  // Get the banner for this category (or undefined if none exists)
-  const banner = categoryBanners[category];
-  
   return <HomeCategory banner={banner} category={category} />;
 };
 
