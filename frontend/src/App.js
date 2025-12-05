@@ -19,13 +19,12 @@ function App() {
           <Route path='/' element={<Home/>}/>
           
           {/* ✅ FIXED: Show ALL products when clicking "Products" */}
-          <Route path='/products' element={<AllProducts banner={new_banner} />}/>
+          <Route path='/products' element={<AllProducts />}/>
           
           {/* ✅ Dynamic route handles specific categories */}
           <Route path='/products/:category' element={<DynamicCategory />}/>
           
           <Route path='/services' element={<HomeCategory banner={services} category="service"/>}/>
-          <Route path='/abouts' element={<HomeCategory banner={new_banner} category="about"/>}/>
           <Route path="/product" element={<Product/>}>
             <Route path=':productId' element={<Product/>}/>
           </Route>
