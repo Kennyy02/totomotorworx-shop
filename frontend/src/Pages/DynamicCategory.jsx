@@ -20,7 +20,7 @@ const DynamicCategory = () => {
     'motor-oil': motor_oil,
     'helmet': helmet_banner,       // Singular to match DB
     'spray-paint': spray_paint,    // Singular to match DB
-    'spray-paint': spray_paints, 
+    'spray-paints': spray_paint, 
     'cable': cable_banner,         // Singular to match DB
     'mirror': new_banner,
     'service': new_banner,
